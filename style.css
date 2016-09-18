@@ -7,30 +7,27 @@
   height: 300px;
   width: 100%;
   display: flex;
-  flex-direction: row;
+  flex-direction: column;
   align-items: center;
   justify-content: center;
 }
 
-.vid-one {
-  background-color: cornflowerblue;
+.slide {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
 }
 
-.vid-two {
-  background-color: tomato;
-  display: none;
-
+.video-title {
+  color: tomato;
 }
 
-.vid-three {
-  background-color: gold;
-  display: none;
-
+.video-description {
+  color: cornflowerblue;
 }
-#my_video_0,
-#my_video_1,
-#my_video_2,
-#my_video_3 {
+
+.vid {
   height: 200px;
   width: 400px;
 }

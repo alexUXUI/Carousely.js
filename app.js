@@ -1,7 +1,7 @@
 const content = {
   copy:  ['lorem ispsum dolor 1','lorem ispsum dolor 2','lorem ispsum dolor 3', 'lorem ispsum dolor 4'],
   title: ['title ispsum dolor 1','title ispsum dolor 2','title ispsum dolor 3', 'title ispsum dolor 4'],
-  links: ['http://vjs.zencdn.net/v/oceans.mp4','http://vjs.zencdn.net/v/oceans.mp4','http://vjs.zencdn.net/v/oceans.mp4','http://vjs.zencdn.net/v/oceans.mp4']
+  links: ['http://vjs.zencdn.net/v/oceans.mp4', 'http://vjs.zencdn.net/v/oceans.mp4', 'http://vjs.zencdn.net/v/oceans.mp4','http://vjs.zencdn.net/v/oceans.mp4','http://vjs.zencdn.net/v/oceans.mp4']
 }
 
 class Carousel {
@@ -14,21 +14,57 @@ class Carousel {
     this.copy = content.copy
   }
 
-  createSlides() {
+  makeDots() {
+    var vidz = this.videoSource;
+    vidz.map((el, i) => { if(i + 1 > 0) this.printDot(i) })
+  }
+
+  printDot(index) { $('.dots').append(`<div class="dot-${ index } dot">•</div>`) }
+
+  addHoverStateToDots() {
+    var dot = $('.dot').get()
+    var dotArr = []
+
+    let dots = []
+
+    var vidz = this.sourceVideos()
+
+    dot.map(function(el, i){
+
+      var num = el.className.split(' ')[0].match(/dot-(\d)/)[1] // grabs class number
+
+      el.addEventListener('mouseover', function(e) {
+        var currDot = $(e.target).attr('class')                 // get dot being hoverd
+        var currNum = el.className.split(' ')[0].match(/dot-(\d)/)[1] // grabs class number
+
+        console.log(currNum);
+
+        dots.push(currDot)
+
+        function switchVideo(digit) {
+          return $(`#my_video_${ digit }`)
+        }
+
+        switchVideo(num)
+      })
+    })
+  }
+
+  renderSlideHTML() {
     var sourceAttributes = this.videoSource;
     let counterLength = this.videoSource.length;
     let suffix = 0;
-    sourceAttributes.forEach((el, i) => {
+    sourceAttributes.map((el, i) => {
       if(i === 0) {
-        this.createVisibleSlide(suffix, el)
+        this.addFirstVideoToSlideOne(suffix, el)
       } else {
-        this.createInvisibleSlide(suffix, el)
+        this.addVideosToSlides(suffix, el)
       }
       suffix++
     })
   }
 
-  getVids() {
+  sourceVideos() {
     var countLength = this.videoSource.length;
     var videoCollection = []
     let counter = 0
@@ -55,16 +91,14 @@ class Carousel {
   }
 
   playSlides() {
-    var vidz = this.getVids()
+    var vidz = this.sourceVideos()
     var slidez = this.getSlides()
-    this.getVids().then(function(vidz) {
+    this.sourceVideos().then(function(vidz) {
       for(var i = 0; i < vidz.length; i++) {
-        let next = vidz[i + 1]
-        let prev = vidz[i - 1]
-        let curr = vidz[i]
-        let currSlide = document.getElementsByClassName(`slide-${ i }`)[0]
-        let nextSlide = document.getElementsByClassName(`slide-${ i + 1 }`)[0]
-        let prevSlide = document.getElementsByClassName(`slide-${ i - 1 }`)[0]
+        let next = vidz[i + 1], prev = vidz[i - 1], curr = vidz[i],
+        currSlide = $(`.slide-${ i }`)[0],
+        nextSlide = $(`.slide-${ i + 1 }`)[0],
+        prevSlide = $(`.slide-${ i - 1 }`)[0]
         if(typeof vidz[i + 1] != 'undefined') {
           function playNextSlide() {
             curr.style.display = "none"
@@ -94,42 +128,57 @@ class Carousel {
     })
   }
 
-  createVisibleSlide(suff, elem) {
-    let newSlide = `<div class="slide-${ suff }"></div>`
+  addFirstVideoToSlideOne(suff, elem) {
+    let newSlide = `<div class="slide-${ suff } slide"></div>`
+    let textContent =`
+      <div class="text-content-${ suff }">
+        <h3 class="video-title">${this.titles[suff]}</h3>
+        <p class="video-description">${this.copy[suff]}</p>
+      </div>`
     this.videoContainer.append(newSlide).css("display", "flex")
-    $(`.slide-${ suff }`).append(
-      `<video
-        id="my_video_0"
-        controls preload="auto"
-        class="slide"
-        src="${ elem }"
-        onended="console.log('its over')">
-      </video>`
-    ).append(`<h3>${this.titles[suff]}</h3>`
-    ).append(`<p>${this.copy[suff]}</p>`)
+    $(`.slide-${ suff }`)
+      .append(
+        `<video
+          id="my_video_0"
+          controls preload="auto"
+          class="vid"
+          src="${ elem }"
+          onended="console.log('video ${ suff } has ended')">
+        </video>`)
+      .append(textContent)
   }
 
-  createInvisibleSlide(suff, elem){
-    let newSlide = `<div class="slide-${ suff }"></div>`
+  addVideosToSlides(suff, elem) {
+    let newSlide = `<div class="slide-${ suff } slide"></div>`
+    let textContent =`
+      <div class="text-content-${ suff }">
+        <h3 class="video-title">${this.titles[suff]}</h3>
+        <p class="video-description">${this.copy[suff]}</p>
+      </div>`
     this.videoContainer.append(newSlide).css('display', 'flex')
-    $(`.slide-${ suff }`).append(
-      `<video id="my_video_${ suff }"
-        controls preload="auto"
-        class="slide"
-        src="${ elem }">
-      </video>`
-    ).append(`<h3>${this.titles[suff]}</h3>`
-    ).append(`<p>${this.copy[suff]}</p>`
-    ).css(
-      'display', 'none'
-    )
+    $(`.slide-${ suff }`)
+      .append(
+        `<video id="my_video_${ suff }"
+          controls preload="auto"
+          class="vid"
+          src="${ elem }"
+          onended="console.log('video ${ suff } has ended')">
+        </video>`)
+      .append(textContent)
+      .css('display', 'none')
+  }
+
+  playFirstVideo() {
+    var videoOne = document.getElementById("my_video_0")
+    videoOne.play()
   }
 
   *startCarousel () {
-    yield this.createSlides()
-    var videoOne = document.getElementById("my_video_0");
-    videoOne.play()
-    yield this.getVids()
+    yield this.renderSlideHTML()
+    yield this.sourceVideos()
+    yield this.playFirstVideo()
+    yield this.makeDots()
+    yield this.addHoverStateToDots()
     yield this.playSlides()
   }
 }
@@ -138,7 +187,11 @@ var carousel = new Carousel(content)
 carousel.startCarousel()
 
 var carouselGenerator = carousel.startCarousel()
-carouselGenerator.next()
-carouselGenerator.next()
-carouselGenerator.next()
-carouselGenerator.next()
+
+function carouselStepThrough() {
+  for(var j = 0; j < 6; j++){
+    console.log(carouselGenerator.next())
+  }
+}
+
+carouselStepThrough()
