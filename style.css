@@ -1,3 +1,11 @@
+/* slide for debugging */
+
+.slide-0 { background-color: tomato; }
+.slide-1 { background-color: cornflowerblue; }
+.slide-2 { background-color: gold; }
+.slide-3 { background-color: sienna; }
+.slide-4 { background-color: aqua; }
+
 .vid { padding: 2%; }
 
 .hide { display: none; }
@@ -20,11 +28,11 @@
 }
 
 .video-title {
-  color: tomato;
+  color: white;
 }
 
 .video-description {
-  color: cornflowerblue;
+  color: black;
 }
 
 .vid {

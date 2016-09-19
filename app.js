@@ -1,58 +1,67 @@
 const content = {
-  copy:  ['lorem ispsum dolor 1','lorem ispsum dolor 2','lorem ispsum dolor 3', 'lorem ispsum dolor 4'],
-  title: ['title ispsum dolor 1','title ispsum dolor 2','title ispsum dolor 3', 'title ispsum dolor 4'],
-  links: ['http://vjs.zencdn.net/v/oceans.mp4', 'http://vjs.zencdn.net/v/oceans.mp4', 'http://vjs.zencdn.net/v/oceans.mp4','http://vjs.zencdn.net/v/oceans.mp4','http://vjs.zencdn.net/v/oceans.mp4']
+  copy:  [
+    'lorem ispsum dolor 1',
+    'lorem ispsum dolor 2',
+    'lorem ispsum dolor 3',
+    'lorem ispsum dolor 4'
+  ],
+  title: [
+    'title ispsum dolor 1',
+    'title ispsum dolor 2',
+    'title ispsum dolor 3',
+    'title ispsum dolor 4'
+  ],
+  links: [
+    'http://vjs.zencdn.net/v/oceans.mp4',
+    'http://vjs.zencdn.net/v/oceans.mp4',
+    'http://vjs.zencdn.net/v/oceans.mp4',
+    'http://vjs.zencdn.net/v/oceans.mp4',
+    'http://vjs.zencdn.net/v/oceans.mp4'
+  ]
 }
+
+/*
+ * @input object of arrays containing
+ *  copy, title, and video src path
+ *  @output returns an html slide and dot for each video
+*/
 
 class Carousel {
 
+ /*
+  * @input DOM node for video
+  * @input DOM node for dots
+  * @input content for video and text
+  */
+
   constructor(content) {
     this.videoContainer =  $('.vid-container')
+    this.dotContainer = $('.dots')
     this.videoSource = content.links
     this.videoSourceLength = content.links.length
     this.titles = content.title
     this.copy = content.copy
   }
 
-  makeDots() {
-    var vidz = this.videoSource;
-    vidz.map((el, i) => { if(i + 1 > 0) this.printDot(i) })
-  }
+ /*
+  * Builds the html, appends the content to them,
+  * adds dot to the dom, attaches controllers to their hover states
+  * plays the fist video on page load. On end each video, play the next
+  * video. If no next video play the first vido.
+  */
 
-  printDot(index) { $('.dots').append(`<div class="dot-${ index } dot">•</div>`) }
-
-  addHoverStateToDots() {
-    var dot = $('.dot').get()
-    var dotArr = []
-
-    let dots = []
-
-    var vidz = this.sourceVideos()
-
-    dot.map(function(el, i){
-
-      var num = el.className.split(' ')[0].match(/dot-(\d)/)[1] // grabs class number
-
-      el.addEventListener('mouseover', function(e) {
-        var currDot = $(e.target).attr('class')                 // get dot being hoverd
-        var currNum = el.className.split(' ')[0].match(/dot-(\d)/)[1] // grabs class number
-
-        console.log(currNum);
-
-        dots.push(currDot)
-
-        function switchVideo(digit) {
-          return $(`#my_video_${ digit }`)
-        }
-
-        switchVideo(num)
-      })
-    })
+  *startCarousel () {
+    yield this.renderSlideHTML()
+    yield this.sourceVideos()
+    yield this.renderDotHTML()
+    yield this.addHoverStateToDots()
+    yield this.playFirstVideo()
+    yield this.recusivelyPlaySlides()
   }
 
   renderSlideHTML() {
+    const counterLength = this.videoSource.length;
     var sourceAttributes = this.videoSource;
-    let counterLength = this.videoSource.length;
     let suffix = 0;
     sourceAttributes.map((el, i) => {
       if(i === 0) {
@@ -65,12 +74,12 @@ class Carousel {
   }
 
   sourceVideos() {
-    var countLength = this.videoSource.length;
+    const countLength = this.videoSource.length;
     var videoCollection = []
     let counter = 0
-    return new Promise(function(resolve, reject){
+    return new Promise(function(resolve, reject) {
       for(var i = 0; i < countLength; i++){
-        var currentVid = document.getElementById(`my_video_${ counter }`);
+        var currentVid = document.getElementById(`my_video_${ counter }`)
         videoCollection.push(currentVid)
         counter++
       }
@@ -78,19 +87,62 @@ class Carousel {
     })
   }
 
-  getSlides() {
-    var countLength = this.videoSource.length;
-    var slideCollection = []
-    let counter = 0
-    for(var i = 0; i < countLength; i++) {
-      var currentVid = document.getElementsByClassName(`slide-${ counter }`)[0];
-      slideCollection.push(currentVid)
-      counter++
-    }
-    return slideCollection
+  renderDotHTML() {
+    var vidz = this.videoSource;
+    vidz.map((el, i) => { if(i + 1 > 0) this.printDot(i) })
   }
 
-  playSlides() {
+  /*
+  1. get all the dots from the dom
+  2. get all the vidz from the dom
+  2. Iterate over them adding eventlisteners for hover
+  3. On hover, pause currently playing video
+  3.A) and play the video of the dot you hovered over
+  */
+
+  addHoverStateToDots() {
+    var dot = $('.dot').get()
+    var vidz = this.sourceVideos()
+
+    dot.forEach((dot) => {
+      dot.addEventListener('mouseover', (e) => {
+        if(dot) {
+          var dotNumber = dot.className.split(' ')[0].match(/dot-(\d)/)[1]; // get the dot number
+          this.currentlyPlayingVideo().then(function(data){                 // grabs the currently playng video at time of hover
+            data.pause()                                                    // pauses the video
+            data.parentNode.style.display = 'none'
+          })
+          this.sourceVideos().then(function(videoToPlay){
+            var nextVideo = videoToPlay[dotNumber]
+            nextVideo.parentNode.style.display = "block"
+            nextVideo.play()
+          })
+        }
+      })
+    })
+  }
+
+  currentlyPlayingVideo(){
+    var videos = $("[id^=my_video_]").get()
+    var currentlyPlaying
+    return new Promise((resolve, reject)=> {
+      videos.map((el, i) => {
+        if (!el.paused) {
+          let currentlyPlaying = $(el)
+          resolve(el)
+        } else console.log('do nothing about vids')
+      })
+    }).catch((e)=> {
+      console.log(e);
+    })
+  }
+
+  playFirstVideo() {
+    var videoOne = document.getElementById("my_video_0")
+    videoOne.play()
+  }
+
+  recusivelyPlaySlides() {
     var vidz = this.sourceVideos()
     var slidez = this.getSlides()
     this.sourceVideos().then(function(vidz) {
@@ -101,10 +153,10 @@ class Carousel {
         prevSlide = $(`.slide-${ i - 1 }`)[0]
         if(typeof vidz[i + 1] != 'undefined') {
           function playNextSlide() {
-            curr.style.display = "none"
-            next.style.display = "flex"
             currSlide.style.display = "none"
             nextSlide.style.display = "flex"
+            curr.style.display = "none"
+            next.style.display = "flex"
             next.play();
           }
           vidz[i].addEventListener('ended', () => {
@@ -128,6 +180,22 @@ class Carousel {
     })
   }
 
+ /*
+  * Helper methods, these get called by other methods w/i this class
+  */
+
+  getSlides() {
+    var countLength = this.videoSource.length;
+    var slideCollection = []
+    let counter = 0
+    for(var i = 0; i < countLength; i++) {
+      var currentVid = $(`.slide-${ counter }`)[0]
+      slideCollection.push(currentVid)
+      counter++
+    }
+    return slideCollection
+  }
+
   addFirstVideoToSlideOne(suff, elem) {
     let newSlide = `<div class="slide-${ suff } slide"></div>`
     let textContent =`
@@ -137,60 +205,37 @@ class Carousel {
       </div>`
     this.videoContainer.append(newSlide).css("display", "flex")
     $(`.slide-${ suff }`)
-      .append(
-        `<video
-          id="my_video_0"
-          controls preload="auto"
-          class="vid"
-          src="${ elem }"
-          onended="console.log('video ${ suff } has ended')">
-        </video>`)
-      .append(textContent)
+       .append(`<video id="my_video_0" controls preload="auto" class="vid" src="${ elem }" onended="console.log('video ${ suff } has ended')"></video>`)
+       .append(textContent)
   }
 
   addVideosToSlides(suff, elem) {
     let newSlide = `<div class="slide-${ suff } slide"></div>`
-    let textContent =`
+
+    let textContent = `
       <div class="text-content-${ suff }">
         <h3 class="video-title">${this.titles[suff]}</h3>
         <p class="video-description">${this.copy[suff]}</p>
       </div>`
+
     this.videoContainer.append(newSlide).css('display', 'flex')
     $(`.slide-${ suff }`)
-      .append(
-        `<video id="my_video_${ suff }"
-          controls preload="auto"
-          class="vid"
-          src="${ elem }"
-          onended="console.log('video ${ suff } has ended')">
-        </video>`)
-      .append(textContent)
-      .css('display', 'none')
+       .append(`<video id="my_video_${ suff }" controls preload="auto" class="vid" src="${ elem }" onended="console.log('video ${ suff } has ended')"></video>`)
+       .append(textContent)
+       .css('display', 'none')
   }
 
-  playFirstVideo() {
-    var videoOne = document.getElementById("my_video_0")
-    videoOne.play()
-  }
-
-  *startCarousel () {
-    yield this.renderSlideHTML()
-    yield this.sourceVideos()
-    yield this.playFirstVideo()
-    yield this.makeDots()
-    yield this.addHoverStateToDots()
-    yield this.playSlides()
+  printDot(index) {
+    this.dotContainer.append(`<div class="dot-${ index } dot">•</div>`)
   }
 }
 
 var carousel = new Carousel(content)
-carousel.startCarousel()
-
 var carouselGenerator = carousel.startCarousel()
 
 function carouselStepThrough() {
   for(var j = 0; j < 6; j++){
-    console.log(carouselGenerator.next())
+    carouselGenerator.next()
   }
 }
 
