@@ -103,7 +103,6 @@ class Carousel {
   addHoverStateToDots() {
     var dot = $('.dot').get()
     var vidz = this.sourceVideos()
-
     dot.forEach((dot) => {
       dot.addEventListener('mouseover', (e) => {
         if(dot) {
@@ -211,20 +210,17 @@ class Carousel {
 
   addVideosToSlides(suff, elem) {
     let newSlide = `<div class="slide-${ suff } slide"></div>`
-
     let textContent = `
       <div class="text-content-${ suff }">
         <h3 class="video-title">${this.titles[suff]}</h3>
         <p class="video-description">${this.copy[suff]}</p>
       </div>`
-
     this.videoContainer.append(newSlide).css('display', 'flex')
     $(`.slide-${ suff }`)
        .append(`<video id="my_video_${ suff }" controls preload="auto" class="vid" src="${ elem }" onended="console.log('video ${ suff } has ended')"></video>`)
        .append(textContent)
        .css('display', 'none')
   }
-
   printDot(index) {
     this.dotContainer.append(`<div class="dot-${ index } dot">•</div>`)
   }
