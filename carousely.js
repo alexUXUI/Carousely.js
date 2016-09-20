@@ -107,9 +107,19 @@ class Carousel {
       dot.addEventListener('mouseover', (e) => {
         if(dot) {
           var dotNumber = dot.className.split(' ')[0].match(/dot-(\d)/)[1]; // get the dot number
+          var dotData = dot.data
+          // console.log('data dot', dotData);
           this.currentlyPlayingVideo().then(function(data){                 // grabs the currently playng video at time of hover
-            data.pause()                                                    // pauses the video
-            data.parentNode.style.display = 'none'
+            var slideData = data.currentlyPlaying;
+            var videoData = data.jQueryObj;
+            var slideNumber = videoData.attr('data-video')
+
+            if (dotNumber === slideNumber) {
+              data.currentlyPlaying.play()
+            } else {
+              data.currentlyPlaying.pause()                                                    // pauses the video
+              data.currentlyPlaying.parentNode.style.display = 'none'
+            }
           })
           this.sourceVideos().then(function(videoToPlay){
             var nextVideo = videoToPlay[dotNumber]
@@ -127,8 +137,11 @@ class Carousel {
     return new Promise((resolve, reject)=> {
       videos.map((el, i) => {
         if (!el.paused) {
-          let currentlyPlaying = $(el)
-          resolve(el)
+          var dataObject = {}
+          dataObject.currentlyPlaying = el
+          dataObject.jQueryObj = $(el)
+          dataObject.currentVideoIndex = i;
+          resolve(dataObject)
         } else console.log('do nothing about vids')
       })
     }).catch((e)=> {
@@ -146,10 +159,12 @@ class Carousel {
     var slidez = this.getSlides()
     this.sourceVideos().then(function(vidz) {
       for(var i = 0; i < vidz.length; i++) {
-        let next = vidz[i + 1], prev = vidz[i - 1], curr = vidz[i],
-        currSlide = $(`.slide-${ i }`)[0],
-        nextSlide = $(`.slide-${ i + 1 }`)[0],
-        prevSlide = $(`.slide-${ i - 1 }`)[0]
+        let next = vidz[i + 1],
+            prev = vidz[i - 1],
+            curr = vidz[i],
+            currSlide = $(`.slide-${ i }`)[0],
+            nextSlide = $(`.slide-${ i + 1 }`)[0],
+            prevSlide = $(`.slide-${ i - 1 }`)[0]
         if(typeof vidz[i + 1] != 'undefined') {
           function playNextSlide() {
             currSlide.style.display = "none"
@@ -196,7 +211,7 @@ class Carousel {
   }
 
   addFirstVideoToSlideOne(suff, elem) {
-    let newSlide = `<div class="slide-${ suff } slide"></div>`
+    let newSlide = `<div class="slide-${ suff } slide" data-slide="${ suff }"></div>`
     let textContent =`
       <div class="text-content-${ suff }">
         <h3 class="video-title">${this.titles[suff]}</h3>
@@ -204,7 +219,7 @@ class Carousel {
       </div>`
     this.videoContainer.append(newSlide).css("display", "flex")
     $(`.slide-${ suff }`)
-       .append(`<video id="my_video_0" controls preload="auto" class="vid" src="${ elem }" onended="console.log('video ${ suff } has ended')"></video>`)
+       .append(`<video id="my_video_0" data-video="0" controls preload="auto" class="vid" src="${ elem }" onended="console.log('video ${ suff } has ended')"></video>`)
        .append(textContent)
   }
 
@@ -217,12 +232,12 @@ class Carousel {
       </div>`
     this.videoContainer.append(newSlide).css('display', 'flex')
     $(`.slide-${ suff }`)
-       .append(`<video id="my_video_${ suff }" controls preload="auto" class="vid" src="${ elem }" onended="console.log('video ${ suff } has ended')"></video>`)
+       .append(`<video id="my_video_${ suff }" data-video="${ suff }" src="${ elem }" controls preload="auto" class="vid" onended="console.log('video ${ suff } has ended')"></video>`)
        .append(textContent)
        .css('display', 'none')
   }
   printDot(index) {
-    this.dotContainer.append(`<div class="dot-${ index } dot">•</div>`)
+    this.dotContainer.append(`<div class="dot-${ index } dot" data-dot="${ index }">•</div>`)
   }
 }
 

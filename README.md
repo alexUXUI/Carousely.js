@@ -113,3 +113,5 @@ var carousel = new Carousel(content)
 
 - if the user manually pauses a video and scrolls over another, the
 paused video does not disappear
+
+- if hover on corresponding dot while video is playing, video disappears
