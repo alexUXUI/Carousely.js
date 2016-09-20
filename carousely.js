@@ -84,6 +84,16 @@ class Carousel {
         counter++
       }
       resolve(videoCollection)
+
+      // this should also return the state of the array
+      /* to do at work tomrrow
+
+        next
+        current
+        prev
+
+      */
+
     })
   }
 
@@ -142,7 +152,11 @@ class Carousel {
           dataObject.jQueryObj = $(el)
           dataObject.currentVideoIndex = i;
           resolve(dataObject)
-        } else console.log('do nothing about vids')
+        } if (el.paused) {
+          // console.log('this is pause', el)
+        } else {
+          // console.log('do noting');
+        }
       })
     }).catch((e)=> {
       console.log(e);
@@ -154,10 +168,28 @@ class Carousel {
     videoOne.play()
   }
 
-  recusivelyPlaySlides() {
+  addPause() {
     var vidz = this.sourceVideos()
     var slidez = this.getSlides()
     this.sourceVideos().then(function(vidz) {
+      for(var i = 0; i < vidz.length; i++) {
+        let next = vidz[i + 1],
+            prev = vidz[i - 1],
+            curr = vidz[i],
+            currSlide = $(`.slide-${ i }`)[0],
+            nextSlide = $(`.slide-${ i + 1 }`)[0],
+            prevSlide = $(`.slide-${ i - 1 }`)[0]
+        vidz[i].addEventListener('pause', () => {
+          console.log('i got paused');
+        })
+      }
+    })
+  }
+
+  recusivelyPlaySlides() {
+    var vidz = this.sourceVideos()
+    var slidez = this.getSlides()
+    this.sourceVideos().then((vidz) => {
       for(var i = 0; i < vidz.length; i++) {
         let next = vidz[i + 1],
             prev = vidz[i - 1],
@@ -173,6 +205,8 @@ class Carousel {
             next.style.display = "flex"
             next.play();
           }
+
+          this.addPause()
           vidz[i].addEventListener('ended', () => {
             playNextSlide()
           })
@@ -186,6 +220,7 @@ class Carousel {
             vidUno.style.display = "block"
             vidUno.play()
           }
+          this.addPause()
           vidz[i].addEventListener('ended', () => {
             playFirstSlide()
           })
@@ -208,6 +243,15 @@ class Carousel {
       counter++
     }
     return slideCollection
+
+    // this should also return the state of the slide array
+    /* to do at work tomrrow
+
+      next
+      current
+      prev
+
+    */
   }
 
   addFirstVideoToSlideOne(suff, elem) {
