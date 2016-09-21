@@ -16,13 +16,13 @@ Carousely.js will create slides with three components: `Title, Video, and Descri
 
 ### How to Set up
 
-###### 1) Include `carousely.js` and `jQuery` in your project
+##### 1) Include `carousely.js` and `jQuery` in your project
 ```html
 <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.3/jquery.min.js"></script>
 <script type="text/javascript" src="./carousely.js"></script>
 ```
 
-###### 2) Add two lines of HTML to your page where you want the video carousel
+##### 2) Add two lines of HTML to your page where you want the video carousel
 
 ```html
 <div class="vid-container"></div>
@@ -33,7 +33,7 @@ Carousely.js will create slides with three components: `Title, Video, and Descri
 
 > The dots container will render a corresponding dot for each slide
 
-###### 3) Create an object for your content data
+##### 3) Create an object for your content data
 
 The object should contain three _even_ arrays:
 
@@ -62,14 +62,14 @@ content.title.length = 2
 content.links.length = 2
 ```
 
-###### 4) Create a new instance of the carousel class, Pass the content object, full of your data to the carousel instance
+##### 4) Create a new instance of the carousel class, Pass the content object, full of your data to the carousel instance
 
 ```javascript
 var carousel = new Carousel(content)
 
 ```
 
-###### 5) If you wish to style a specific slide or add logic / behavior to a specific video object, you can hook into any slide or video node with the naming conventions used in the slide rendering functions.
+##### 5) If you wish to style a specific slide or add logic / behavior to a specific video object, you can hook into any slide or video node with the naming conventions used in the slide rendering functions.
 
 >  Class names for slide have a prefix of .slide- and a suffix of [number]
 >  together each slide can be targeted by .slide-[number]
@@ -102,7 +102,7 @@ var carousel = new Carousel(content)
 }
 ```
 
-###### 6) Open the HTML file in your browser. Inspect the video and dot containers to find that Carousely has generated the following HTML for the video container.
+##### 6) Open the HTML file in your browser. Inspect the video and dot containers to find that Carousely has generated the following HTML for the video container.
 
 ```html
 <div class="vid-container" style="display: flex;">
@@ -129,7 +129,7 @@ var carousel = new Carousel(content)
   </div>  
 </div>
 ```
-###### 7) As well as the following output for the dot container
+##### 7) As well as the following output for the dot container
 
 ```html
 <div class="dots">
