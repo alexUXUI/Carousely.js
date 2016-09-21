@@ -2,17 +2,10 @@
 ### A small tool made for building video carousels.
 
 ###### Philosophy
-Finally, no more clunky carousels for your content.
-
-Carousely is minimal, un-opinionated, and easy to use.
-All you need is jQuery and `carousely.js`
-
 No more wrestling with large code-bases to make simple changes and configurations.
-Now you finally have a minimal tool that's built to be simple and easy to work with.
 
 ## How does it work?
-
-Carousely.js will create slides with three components: `Title, Video, and Description.` Carosuley plays the first video. Once the first video ends, it will recursively play every video after until there are no more videos. In that case, carousely will play the first video again. Forever looping through your videos.
+Based on the info you pass, Carousely.js will create slides with three components: `Title, Video, and Description.`
 
 ### How to Set up
 

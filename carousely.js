@@ -24,7 +24,7 @@ const content = {
  * @input object of arrays containing
  *  copy, title, and video src path
  *  @output returns an html slide and dot for each video
-*/
+**/
 
 class Carousel {
 
@@ -32,7 +32,7 @@ class Carousel {
   * @input DOM node for video
   * @input DOM node for dots
   * @input content for video and text
-  */
+**/
 
   constructor(content) {
     this.videoContainer =  $('.vid-container')
@@ -148,21 +148,21 @@ class Carousel {
   currentlyPlayingVideo(){
     var videos = $("[id^=my_video_]").get()
     var currentlyPlaying
-    return new Promise((resolve, reject)=> {
+    return new Promise((resolve, reject) => {
       videos.map((el, i) => {
         if (!el.paused) {
           var dataObject = {}
           dataObject.currentlyPlaying = el
           dataObject.jQueryObj = $(el)
-          dataObject.currentVideoIndex = i;
+          dataObject.currentVideoIndex = i
           resolve(dataObject)
         } if (el.paused) {
           // console.log('this is pause', el)
         } else {
-          // console.log('do noting');
+          // console.log('do noting')
         }
       })
-    }).catch((e)=> {
+    }).catch((e) => {
       console.log(e);
     })
   }
@@ -183,8 +183,16 @@ class Carousel {
             currSlide = $(`.slide-${ i }`)[0],
             nextSlide = $(`.slide-${ i + 1 }`)[0],
             prevSlide = $(`.slide-${ i - 1 }`)[0]
+
         vidz[i].addEventListener('pause', () => {
-          console.log('i got paused');
+          console.log('i got paused')
+          // get all the dots
+          //
+          //
+          $('body').css('background-color', 'red');
+        // if the video is paused and the user scrolls over any button that
+        // does not equal the number of the dot
+
         })
       }
     })
@@ -208,7 +216,6 @@ class Carousel {
             next.style.display = "flex"
             next.play();
           }
-
           this.addPause()
           vidz[i].addEventListener('ended', () => {
             playNextSlide()
@@ -217,10 +224,9 @@ class Carousel {
           let vidUno = vidz[0]
           let slideUno = slidez[0]
           function playFirstSlide() {
-            curr.style.display = "none"
             currSlide.style.display = "none"
-            slideUno.style.display = 'block'
-            vidUno.style.display = "block"
+            slideUno.style.display = 'flex'
+            vidUno.style.display = "flex"
             vidUno.play()
           }
           this.addPause()
@@ -234,10 +240,10 @@ class Carousel {
 
  /*
   * Helper methods, these get called by other methods w/i this class
-  */
+  **/
 
   getSlides() {
-    var countLength = this.videoSource.length;
+    var countLength = this.videoSource.length
     var slideCollection = []
     let counter = 0
     for(var i = 0; i < countLength; i++) {

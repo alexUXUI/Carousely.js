@@ -1,0 +1,30 @@
+{
+  "name": "carousely.js",
+  "version": "0.0.1",
+  "description": "video carousel written in html, javascript, and jQuery",
+  "main": "carousely.js",
+  "scripts": {
+    "test": "test"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/alexUXUI/programatic-video-carousel.git"
+  },
+  "author": "Alex Bennett <alexandergraybennett@gmail.com> (http://thedope.agency)",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/alexUXUI/programatic-video-carousel/issues"
+  },
+  "homepage": "https://github.com/alexUXUI/programatic-video-carousel#readme",
+  "dependencies": {
+    "gulp": "^3.9.1"
+  },
+  "devDependencies": {
+    "babel-core": "^6.14.0",
+    "babel-loader": "^6.2.5",
+    "babel-polyfill": "^6.13.0",
+    "babel-preset-es2015": "^6.14.0",
+    "babel-preset-stage-0": "^6.0.15",
+    "webpack": "^1.13.2"
+  }
+}
