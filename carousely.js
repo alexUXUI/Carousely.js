@@ -118,15 +118,19 @@ class Carousel {
         if(dot) {
           var dotNumber = dot.className.split(' ')[0].match(/dot-(\d)/)[1]; // get the dot number
           var dotData = dot.data
-          // console.log('data dot', dotData);
           this.currentlyPlayingVideo().then(function(data){                 // grabs the currently playng video at time of hover
             var slideData = data.currentlyPlaying;
             var videoData = data.jQueryObj;
             var slideNumber = videoData.attr('data-video')
-
             if (dotNumber === slideNumber) {
+              if(videoData){
+                console.log('got some video data', videoData);
+              }
               data.currentlyPlaying.play()
             } else {
+              if(videoData){
+                console.log('got some video data', videoData);
+              }
               data.currentlyPlaying.pause()                                                    // pauses the video
               data.currentlyPlaying.parentNode.style.display = 'none'
             }
@@ -201,7 +205,6 @@ class Carousel {
           function playNextSlide() {
             currSlide.style.display = "none"
             nextSlide.style.display = "flex"
-            curr.style.display = "none"
             next.style.display = "flex"
             next.play();
           }
