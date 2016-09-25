@@ -8477,18 +8477,33 @@
 	        prev
 	       */
 	    }
+
+	    /*
+	     * 1) Creates a new slide element for all the content
+	     * 2) Creates a new element for title and description text and passes:
+	     *  - Title text to <h3 class="video-title">
+	     *  - Description text to <p class="video-description">
+	     * 3) Appends the slide to the video container
+	     * 4) Passes a video soure path to the video element
+	     * 5) Creates a video element called 'currentVideo'
+	     * 6) Append the text content to the
+	     */
+
 	  }, {
 	    key: 'addVideosToSlides',
 	    value: function addVideosToSlides(suff, elem) {
 	      var newSlide = '<div class="slide-' + suff + ' slide"></div>';
+
 	      var textContent = '\n      <div class="text-content-' + suff + '">\n        <h3 class="video-title">' + this.titles[suff] + '</h3>\n        <p class="video-description">' + this.copy[suff] + '</p>\n      </div>';
+
 	      this.videoContainer.append(newSlide).css('display', 'flex');
 
-	      if (suff === 0) {
+	      var currentVideo = '<video id="my_video_' + suff + '" data-video="' + suff + '" src="' + elem + '" controls preload="auto" class="vid_' + suff + '"></video>';
 
-	        $('.slide-' + suff).append('<video id="my_video_0" data-video="0" controls preload="auto" class="vid" src="' + elem + '" onended="console.log(\'video ' + suff + ' has ended\')"></video>').append(textContent);
+	      if (suff === 0) {
+	        $('.slide-' + suff).append(currentVideo).append(textContent);
 	      } else {
-	        $('.slide-' + suff).append('<video id="my_video_' + suff + '" data-video="' + suff + '" src="' + elem + '" controls preload="auto" class="vid" onended="console.log(\'video ' + suff + ' has ended\')"></video>').append(textContent).css('display', 'none');
+	        $('.slide-' + suff).append(currentVideo).append(textContent).css('display', 'none');
 	      }
 	    }
 	  }, {

@@ -6,7 +6,10 @@
 .slide-3 { background-color: sienna; }
 .slide-4 { background-color: aqua; }
 
-.vid { padding: 2%; }
+[class^="vid_"] {
+  height: 200px;
+  width: 400px;
+}
 
 .hide { display: none; }
 .show { display: flex; }
@@ -35,11 +38,6 @@
   color: black;
 }
 
-.vid {
-  height: 200px;
-  width: 400px;
-}
-
 .extras {
   display: flex;
   flex-direction: column;
@@ -48,9 +46,6 @@
 .dots {
   display: flex;
   flex-direction: row;
-}
-
-.dots {
   width: 485px;
   margin: auto;
   background-color: black;
