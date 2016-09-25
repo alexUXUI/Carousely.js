@@ -8343,15 +8343,11 @@
 	          var nextVideo = videos[i + 1];
 	          var firstVideo = videos[0];
 	          var firstSlide = slides[0];
-	          if (videos[i + 1]) {
-	            videos[i].addEventListener('ended', function () {
-	              _this4.playNextSlide(currentSlide, nextSlide, nextVideo);
-	            });
-	          } else {
-	            videos[i].addEventListener('ended', function () {
-	              _this4.playFirstSlide(currentSlide, firstSlide, firstVideo);
-	            });
-	          }
+	          if (videos[i + 1]) videos[i].addEventListener('ended', function () {
+	            return _this4.playNextSlide(currentSlide, nextSlide, nextVideo);
+	          });else videos[i].addEventListener('ended', function () {
+	            return _this4.playFirstSlide(currentSlide, firstSlide, firstVideo);
+	          });
 	        };
 
 	        for (var i = 0; i < videos.length; i++) {

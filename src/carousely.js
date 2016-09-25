@@ -107,15 +107,8 @@ class Carousel {
         let nextVideo = videos[i + 1]
         let firstVideo = videos[0]
         let firstSlide = slides[0]
-        if(videos[i + 1]) {
-          videos[i].addEventListener('ended', () => {
-            this.playNextSlide(currentSlide, nextSlide, nextVideo)
-          })
-        } else {
-          videos[i].addEventListener('ended', () => {
-            this.playFirstSlide(currentSlide, firstSlide, firstVideo)
-          })
-        }
+        if(videos[i + 1]) videos[i].addEventListener('ended', () => this.playNextSlide(currentSlide, nextSlide, nextVideo))
+        else videos[i].addEventListener('ended', () => this.playFirstSlide(currentSlide, firstSlide, firstVideo)) 
       }
     })
   }
