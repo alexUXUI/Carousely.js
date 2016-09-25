@@ -8364,35 +8364,8 @@
 	      videoOne.play();
 	    }
 	  }, {
-	    key: 'addPause',
-	    value: function addPause() {
-	      var vidz = this.sourceVideos();
-	      var slidez = this.getSlides();
-	      this.sourceVideos().then(function (vidz) {
-	        for (var i = 0; i < vidz.length; i++) {
-	          var next = vidz[i + 1],
-	              prev = vidz[i - 1],
-	              curr = vidz[i],
-	              currSlide = $('.slide-' + i)[0],
-	              nextSlide = $('.slide-' + (i + 1))[0],
-	              prevSlide = $('.slide-' + (i - 1))[0];
-
-	          vidz[i].addEventListener('pause', function () {
-	            console.log('i got paused');
-	            // get all the dots
-	            //
-	            //
-	            // if the video is paused and the user scrolls over any button that
-	            // does not equal the number of the dot
-	          });
-	        }
-	      });
-	    }
-	  }, {
 	    key: 'recusivelyPlaySlides',
 	    value: function recusivelyPlaySlides() {
-	      var _this4 = this;
-
 	      var vidz = this.sourceVideos();
 	      var slidez = this.getSlides();
 	      this.sourceVideos().then(function (vidz) {
@@ -8412,7 +8385,6 @@
 	                next.play();
 	              };
 
-	              _this4.addPause();
 	              vidz[i].addEventListener('ended', function () {
 	                playNextSlide();
 	              });
@@ -8429,7 +8401,6 @@
 	              var vidUno = vidz[0];
 	              var slideUno = slidez[0];
 
-	              _this4.addPause();
 	              vidz[i].addEventListener('ended', function () {
 	                playFirstSlide();
 	              });
@@ -8458,13 +8429,6 @@
 	        i++;
 	      }
 	      return slideCollection;
-
-	      // this should also return the state of the slide array
-	      /* to do at work tomrrow
-	         next
-	        current
-	        prev
-	       */
 	    }
 
 	    /*
@@ -8482,8 +8446,8 @@
 	    key: 'addVideosToSlides',
 	    value: function addVideosToSlides(suff, elem) {
 	      var newSlide = '<div class="slide-' + suff + ' slide"></div>';
-	      var textContent = '\n      <div class="text-content-' + suff + '">\n        <h3 class="video-title">' + this.titles[suff] + '</h3>\n        <p class="video-description">' + this.copy[suff] + '</p>\n      </div>';
 	      this.videoContainer.append(newSlide).css('display', 'flex');
+	      var textContent = '<div class="text-content-' + suff + '"><h3 class="video-title">' + this.titles[suff] + '</h3><p class="video-description">' + this.copy[suff] + '</p></div>';
 	      var currentVideo = '<video id="my_video_' + suff + '" data-video="' + suff + '" src="' + elem + '" controls preload="auto" class="vid_' + suff + '"></video>';
 	      if (suff === 0) {
 	        $('.slide-' + suff).append(currentVideo).append(textContent);

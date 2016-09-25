@@ -129,31 +129,6 @@ class Carousel {
     videoOne.play()
   }
 
-  addPause() {
-    var vidz = this.sourceVideos()
-    var slidez = this.getSlides()
-    this.sourceVideos().then(function(vidz) {
-      for(var i = 0; i < vidz.length; i++) {
-        let next = vidz[i + 1],
-            prev = vidz[i - 1],
-            curr = vidz[i],
-            currSlide = $(`.slide-${ i }`)[0],
-            nextSlide = $(`.slide-${ i + 1 }`)[0],
-            prevSlide = $(`.slide-${ i - 1 }`)[0]
-
-        vidz[i].addEventListener('pause', () => {
-          console.log('i got paused')
-          // get all the dots
-          //
-          //
-        // if the video is paused and the user scrolls over any button that
-        // does not equal the number of the dot
-
-        })
-      }
-    })
-  }
-
   recusivelyPlaySlides() {
     var vidz = this.sourceVideos()
     var slidez = this.getSlides()
@@ -172,7 +147,6 @@ class Carousel {
             next.style.display = "flex"
             next.play();
           }
-          this.addPause()
           vidz[i].addEventListener('ended', () => {
             playNextSlide()
           })
@@ -185,7 +159,6 @@ class Carousel {
             vidUno.style.display = "flex"
             vidUno.play()
           }
-          this.addPause()
           vidz[i].addEventListener('ended', () => {
             playFirstSlide()
           })
@@ -197,7 +170,6 @@ class Carousel {
  /*
   * Helper methods, these get called by other methods w/i this class
   **/
-
   getSlides() {
     var countLength = this.videoSource.length
     var slideCollection = []
@@ -207,15 +179,6 @@ class Carousel {
       i++
     }
     return slideCollection
-
-    // this should also return the state of the slide array
-    /* to do at work tomrrow
-
-      next
-      current
-      prev
-
-    */
   }
 
   /*
@@ -228,15 +191,10 @@ class Carousel {
    * 5) Creates a video element called 'currentVideo'
    * 6) Append the text content to the
    */
-
   addVideosToSlides(suff, elem) {
     let newSlide = `<div class="slide-${ suff } slide"></div>`
-    let textContent = `
-      <div class="text-content-${ suff }">
-        <h3 class="video-title">${this.titles[suff]}</h3>
-        <p class="video-description">${this.copy[suff]}</p>
-      </div>`
     this.videoContainer.append(newSlide).css('display', 'flex')
+    let textContent = `<div class="text-content-${ suff }"><h3 class="video-title">${this.titles[suff]}</h3><p class="video-description">${this.copy[suff]}</p></div>`
     let currentVideo = `<video id="my_video_${ suff }" data-video="${ suff }" src="${ elem }" controls preload="auto" class="vid_${ suff }"></video>`
     if(suff === 0) {
       $(`.slide-${ suff }`).append(currentVideo).append(textContent)
