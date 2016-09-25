@@ -8191,16 +8191,14 @@
 	 * @input object of arrays containing
 	 *  copy, title, and video src path
 	 *  @output returns an html slide and dot for each video
-	**/
-
+	 */
 	var Carousel = function () {
 
 	  /*
 	   * @input DOM node for video
 	   * @input DOM node for dots
 	   * @input content for video and text
-	  **/
-
+	   */
 	  function Carousel(content) {
 	    _classCallCheck(this, Carousel);
 
@@ -8218,6 +8216,7 @@
 	   * plays the fist video on page load. On end each video, play the next
 	   * video. If no next video play the first vido.
 	   */
+
 
 	  _createClass(Carousel, [{
 	    key: 'startCarousel',
@@ -8303,11 +8302,10 @@
 	    }
 
 	    /*
-	    1. get all the dots from the dom
-	    2. get all the vidz from the dom
-	    2. Iterate over them adding eventlisteners for hover
-	    3. On hover, pause currently playing video
-	    3.A) and play the video of the dot you hovered over
+	     * 1. get all the dots from the dom
+	     * 2. Iterate over them adding eventlisteners for hover
+	     * 3. On hover, pause currently playing video
+	     * 3. A) and play the video of the dot you hovered over
 	    */
 
 	  }, {
@@ -8324,14 +8322,8 @@
 	            var videoData = data.jQueryObj;
 	            var slideNumber = videoData.attr('data-video');
 	            if (dotNumber === slideNumber) {
-	              if (videoData) {
-	                console.log('got some video data', videoData);
-	              }
 	              data.currentlyPlaying.play();
 	            } else {
-	              if (videoData) {
-	                console.log('got some video data', videoData);
-	              }
 	              data.currentlyPlaying.pause();
 	              data.currentlyPlaying.parentNode.style.display = 'none';
 	            }
@@ -8358,10 +8350,13 @@
 	            dataObject.currentVideoIndex = i;
 	            resolve(dataObject);
 	          }if (el.paused) {
-	            // console.log('this is pause', el)
+	            var currentlyPaused = el.getAttribute('data-video');
+	            var hideMe = document.getElementsByClassName('slide-' + currentlyPaused)[0];
+	            console.log('heres hide me ' + hideMe);
+	            hideMe.style.display = 'none';
 	          } else {
-	              // console.log('do noting')
-	            }
+	            // console.log('do noting')
+	          }
 	        });
 	      });
 	    }
@@ -8547,9 +8542,13 @@
 	'use strict';
 
 	var slideContent = {
+
 	  copy: ['lorem ispsum dolor 1', 'lorem ispsum dolor 2', 'lorem ispsum dolor 3', 'lorem ispsum dolor 4'],
+
 	  title: ['title ispsum dolor 1', 'title ispsum dolor 2', 'title ispsum dolor 3', 'title ispsum dolor 4'],
+
 	  links: ['http://vjs.zencdn.net/v/oceans.mp4', 'http://vjs.zencdn.net/v/oceans.mp4', 'http://vjs.zencdn.net/v/oceans.mp4', 'http://vjs.zencdn.net/v/oceans.mp4', 'http://vjs.zencdn.net/v/oceans.mp4']
+
 	};
 
 	module.exports = slideContent;

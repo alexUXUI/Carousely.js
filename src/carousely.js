@@ -2,16 +2,14 @@
  * @input object of arrays containing
  *  copy, title, and video src path
  *  @output returns an html slide and dot for each video
-**/
-
+ */
 class Carousel {
 
  /*
   * @input DOM node for video
   * @input DOM node for dots
   * @input content for video and text
-**/
-
+  */
   constructor(content) {
     this.videoContainer =  $('.vid-container')
     this.dotContainer = $('.dots')
@@ -27,7 +25,6 @@ class Carousel {
   * plays the fist video on page load. On end each video, play the next
   * video. If no next video play the first vido.
   */
-
   *startCarousel () {
     yield this.renderSlideHTML()
     yield this.sourceVideos()
@@ -77,13 +74,11 @@ class Carousel {
   }
 
   /*
-  1. get all the dots from the dom
-  2. get all the vidz from the dom
-  2. Iterate over them adding eventlisteners for hover
-  3. On hover, pause currently playing video
-  3.A) and play the video of the dot you hovered over
+   * 1. get all the dots from the dom
+   * 2. Iterate over them adding eventlisteners for hover
+   * 3. On hover, pause currently playing video
+   * 3. A) and play the video of the dot you hovered over
   */
-
   addHoverStateToDots() {
     var dot = $('.dot').get()
     dot.forEach((dot) => {
@@ -94,14 +89,8 @@ class Carousel {
           let videoData = data.jQueryObj;
           let slideNumber = videoData.attr('data-video')
           if (dotNumber === slideNumber) {
-            if(videoData){
-              console.log('got some video data', videoData);
-            }
             data.currentlyPlaying.play()
           } else {
-            if(videoData){
-              console.log('got some video data', videoData);
-            }
             data.currentlyPlaying.pause()
             data.currentlyPlaying.parentNode.style.display = 'none'
           }
@@ -127,7 +116,10 @@ class Carousel {
           dataObject.currentVideoIndex = i
           resolve(dataObject)
         } if (el.paused) {
-          // console.log('this is pause', el)
+          var currentlyPaused = el.getAttribute('data-video')
+          var hideMe = document.getElementsByClassName(`slide-${ currentlyPaused }`)[0]
+          console.log(`heres hide me ${ hideMe }`);
+          hideMe.style.display = 'none'
         } else {
           // console.log('do noting')
         }
