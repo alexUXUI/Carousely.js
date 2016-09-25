@@ -8265,11 +8265,7 @@
 	      var sourceAttributes = this.videoSource;
 	      var suffix = 0;
 	      sourceAttributes.map(function (el, i) {
-	        if (i === 0) {
-	          _this.addFirstVideoToSlideOne(suffix, el);
-	        } else {
-	          _this.addVideosToSlides(suffix, el);
-	        }
+	        _this.addVideosToSlides(suffix, el);
 	        suffix++;
 	      });
 	    }
@@ -8323,33 +8319,30 @@
 	      var vidz = this.sourceVideos();
 	      dot.forEach(function (dot) {
 	        dot.addEventListener('mouseover', function (e) {
-	          if (dot) {
-	            var dotNumber = dot.className.split(' ')[0].match(/dot-(\d)/)[1]; // get the dot number
-	            var dotData = dot.data;
-	            _this3.currentlyPlayingVideo().then(function (data) {
-	              // grabs the currently playng video at time of hover
-	              var slideData = data.currentlyPlaying;
-	              var videoData = data.jQueryObj;
-	              var slideNumber = videoData.attr('data-video');
-	              if (dotNumber === slideNumber) {
-	                if (videoData) {
-	                  console.log('got some video data', videoData);
-	                }
-	                data.currentlyPlaying.play();
-	              } else {
-	                if (videoData) {
-	                  console.log('got some video data', videoData);
-	                }
-	                data.currentlyPlaying.pause(); // pauses the video
-	                data.currentlyPlaying.parentNode.style.display = 'none';
+	          var dotNumber = dot.className.split(' ')[0].match(/dot-(\d)/)[1];
+	          var dotData = dot.data;
+	          _this3.currentlyPlayingVideo().then(function (data) {
+	            var slideData = data.currentlyPlaying;
+	            var videoData = data.jQueryObj;
+	            var slideNumber = videoData.attr('data-video');
+	            if (dotNumber === slideNumber) {
+	              if (videoData) {
+	                console.log('got some video data', videoData);
 	              }
-	            });
-	            _this3.sourceVideos().then(function (videoToPlay) {
-	              var nextVideo = videoToPlay[dotNumber];
-	              nextVideo.parentNode.style.display = "block";
-	              nextVideo.play();
-	            });
-	          }
+	              data.currentlyPlaying.play();
+	            } else {
+	              if (videoData) {
+	                console.log('got some video data', videoData);
+	              }
+	              data.currentlyPlaying.pause();
+	              data.currentlyPlaying.parentNode.style.display = 'none';
+	            }
+	          });
+	          _this3.sourceVideos().then(function (videoToPlay) {
+	            var nextVideo = videoToPlay[dotNumber];
+	            nextVideo.parentNode.style.display = "block";
+	            nextVideo.play();
+	          });
 	        });
 	      });
 	    }
@@ -8372,8 +8365,6 @@
 	              // console.log('do noting')
 	            }
 	        });
-	      }).catch(function (e) {
-	        console.log(e);
 	      });
 	    }
 	  }, {
@@ -8487,20 +8478,18 @@
 	       */
 	    }
 	  }, {
-	    key: 'addFirstVideoToSlideOne',
-	    value: function addFirstVideoToSlideOne(suff, elem) {
-	      var newSlide = '<div class="slide-' + suff + ' slide" data-slide="' + suff + '"></div>';
-	      var textContent = '\n      <div class="text-content-' + suff + '">\n        <h3 class="video-title">' + this.titles[suff] + '</h3>\n        <p class="video-description">' + this.copy[suff] + '</p>\n      </div>';
-	      this.videoContainer.append(newSlide).css("display", "flex");
-	      $('.slide-' + suff).append('<video id="my_video_0" data-video="0" controls preload="auto" class="vid" src="' + elem + '" onended="console.log(\'video ' + suff + ' has ended\')"></video>').append(textContent);
-	    }
-	  }, {
 	    key: 'addVideosToSlides',
 	    value: function addVideosToSlides(suff, elem) {
 	      var newSlide = '<div class="slide-' + suff + ' slide"></div>';
 	      var textContent = '\n      <div class="text-content-' + suff + '">\n        <h3 class="video-title">' + this.titles[suff] + '</h3>\n        <p class="video-description">' + this.copy[suff] + '</p>\n      </div>';
 	      this.videoContainer.append(newSlide).css('display', 'flex');
-	      $('.slide-' + suff).append('<video id="my_video_' + suff + '" data-video="' + suff + '" src="' + elem + '" controls preload="auto" class="vid" onended="console.log(\'video ' + suff + ' has ended\')"></video>').append(textContent).css('display', 'none');
+
+	      if (suff === 0) {
+
+	        $('.slide-' + suff).append('<video id="my_video_0" data-video="0" controls preload="auto" class="vid" src="' + elem + '" onended="console.log(\'video ' + suff + ' has ended\')"></video>').append(textContent);
+	      } else {
+	        $('.slide-' + suff).append('<video id="my_video_' + suff + '" data-video="' + suff + '" src="' + elem + '" controls preload="auto" class="vid" onended="console.log(\'video ' + suff + ' has ended\')"></video>').append(textContent).css('display', 'none');
+	      }
 	    }
 	  }, {
 	    key: 'printDot',
