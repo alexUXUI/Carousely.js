@@ -1,7 +1,7 @@
 module.exports = {
-  entry: ['babel-polyfill', "./carousely.js"],
+  entry: ['babel-polyfill', "./src/carousely.js"],
   output: {
-    filename: "carousely.bundle.js"
+    filename: "./dist/carousely.bundle.js"
   },
   module: {
     loaders: [
