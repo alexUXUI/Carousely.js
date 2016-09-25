@@ -8188,15 +8188,15 @@
 	function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
 
 	var Carousel = function () {
-	  function Carousel(content) {
+	  function Carousel(slideContent) {
 	    _classCallCheck(this, Carousel);
 
+	    this.videoSource = slideContent.links;
+	    this.videoSourceLength = slideContent.links.length;
+	    this.titles = slideContent.title;
+	    this.copy = slideContent.copy;
 	    this.videoContainer = $('.vid-container');
 	    this.dotContainer = $('.dots');
-	    this.videoSource = content.links;
-	    this.videoSourceLength = content.links.length;
-	    this.titles = content.title;
-	    this.copy = content.copy;
 	  }
 
 	  _createClass(Carousel, [{
@@ -8398,11 +8398,7 @@
 	      this.videoContainer.append(newSlide).css('display', 'flex');
 	      var textContent = '<div class="text-content-' + suff + '"><h3 class="video-title">' + this.titles[suff] + '</h3><p class="video-description">' + this.copy[suff] + '</p></div>';
 	      var currentVideo = '<video id="my_video_' + suff + '" data-video="' + suff + '" src="' + elem + '" controls preload="auto" class="vid_' + suff + '"></video>';
-	      if (suff === 0) {
-	        $('.slide-' + suff).append(currentVideo).append(textContent);
-	      } else {
-	        $('.slide-' + suff).append(currentVideo).append(textContent).css('display', 'none');
-	      }
+	      if (suff === 0) $('.slide-' + suff).append(currentVideo).append(textContent);else $('.slide-' + suff).append(currentVideo).append(textContent).css('display', 'none');
 	    }
 	  }, {
 	    key: 'printDot',

@@ -1,15 +1,15 @@
 class Carousel {
 
-  constructor(content) {
+  constructor(slideContent) {
+    this.videoSource = slideContent.links
+    this.videoSourceLength = slideContent.links.length
+    this.titles = slideContent.title
+    this.copy = slideContent.copy
     this.videoContainer =  $('.vid-container')
     this.dotContainer = $('.dots')
-    this.videoSource = content.links
-    this.videoSourceLength = content.links.length
-    this.titles = content.title
-    this.copy = content.copy
   }
 
-  *startCarousel () {
+  *startCarousel() {
     yield this.renderSlideHTML()
     yield this.sourceVideos()
     yield this.renderDotHTML()
@@ -150,13 +150,10 @@ class Carousel {
   addVideosToSlides(suff, elem) {
     let newSlide = `<div class="slide-${ suff } slide"></div>`
     this.videoContainer.append(newSlide).css('display', 'flex')
-    let textContent = `<div class="text-content-${ suff }"><h3 class="video-title">${this.titles[suff]}</h3><p class="video-description">${this.copy[suff]}</p></div>`
+    let textContent = `<div class="text-content-${ suff }"><h3 class="video-title">${ this.titles[ suff ] }</h3><p class="video-description">${ this.copy[ suff ] }</p></div>`
     let currentVideo = `<video id="my_video_${ suff }" data-video="${ suff }" src="${ elem }" controls preload="auto" class="vid_${ suff }"></video>`
-    if(suff === 0) {
-      $(`.slide-${ suff }`).append(currentVideo).append(textContent)
-    } else {
-      $(`.slide-${ suff }`).append(currentVideo).append(textContent).css('display', 'none')
-    }
+    if (suff === 0) $(`.slide-${ suff }`).append(currentVideo).append(textContent)
+    else $(`.slide-${ suff }`).append(currentVideo).append(textContent).css('display', 'none')
   }
 
   printDot(index) {
