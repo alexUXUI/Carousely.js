@@ -134,9 +134,6 @@ var carousel = new Carousel(content)
 
 #### known bugs
 
-- if the user manually pauses a video and scrolls over another, the
-paused video does not disappear
-
 - end infinite recursion --> make this configurable
 
 - data object not good in that each array should contain a slide's

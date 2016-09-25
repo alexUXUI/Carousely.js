@@ -8352,10 +8352,7 @@
 	          }if (el.paused) {
 	            var currentlyPaused = el.getAttribute('data-video');
 	            var hideMe = document.getElementsByClassName('slide-' + currentlyPaused)[0];
-	            console.log('heres hide me ' + hideMe);
 	            hideMe.style.display = 'none';
-	          } else {
-	            // console.log('do noting')
 	          }
 	        });
 	      });
