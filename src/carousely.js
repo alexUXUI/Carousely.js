@@ -86,15 +86,13 @@ class Carousel {
 
   addHoverStateToDots() {
     var dot = $('.dot').get()
-    var vidz = this.sourceVideos()
     dot.forEach((dot) => {
       dot.addEventListener('mouseover', (e) => {
-        var dotNumber = dot.className.split(' ')[0].match(/dot-(\d)/)[1];
-        var dotData = dot.data
+        let dotNumber = dot.getAttribute('data-dot')
         this.currentlyPlayingVideo().then(function(data){
-          var slideData = data.currentlyPlaying;
-          var videoData = data.jQueryObj;
-          var slideNumber = videoData.attr('data-video')
+          let slideData = data.currentlyPlaying;
+          let videoData = data.jQueryObj;
+          let slideNumber = videoData.attr('data-video')
           if (dotNumber === slideNumber) {
             if(videoData){
               console.log('got some video data', videoData);
@@ -214,11 +212,10 @@ class Carousel {
   getSlides() {
     var countLength = this.videoSource.length
     var slideCollection = []
-    let counter = 0
     for(var i = 0; i < countLength; i++) {
-      var currentVid = $(`.slide-${ counter }`)[0]
+      var currentVid = $(`.slide-${ i }`)[0]
       slideCollection.push(currentVid)
-      counter++
+      i++
     }
     return slideCollection
 
@@ -245,17 +242,13 @@ class Carousel {
 
   addVideosToSlides(suff, elem) {
     let newSlide = `<div class="slide-${ suff } slide"></div>`
-
     let textContent = `
       <div class="text-content-${ suff }">
         <h3 class="video-title">${this.titles[suff]}</h3>
         <p class="video-description">${this.copy[suff]}</p>
       </div>`
-
     this.videoContainer.append(newSlide).css('display', 'flex')
-
     let currentVideo = `<video id="my_video_${ suff }" data-video="${ suff }" src="${ elem }" controls preload="auto" class="vid_${ suff }"></video>`
-
     if(suff === 0) {
       $(`.slide-${ suff }`).append(currentVideo).append(textContent)
     } else {

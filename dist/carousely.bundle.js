@@ -8316,11 +8316,9 @@
 	      var _this3 = this;
 
 	      var dot = $('.dot').get();
-	      var vidz = this.sourceVideos();
 	      dot.forEach(function (dot) {
 	        dot.addEventListener('mouseover', function (e) {
-	          var dotNumber = dot.className.split(' ')[0].match(/dot-(\d)/)[1];
-	          var dotData = dot.data;
+	          var dotNumber = dot.getAttribute('data-dot');
 	          _this3.currentlyPlayingVideo().then(function (data) {
 	            var slideData = data.currentlyPlaying;
 	            var videoData = data.jQueryObj;
@@ -8462,11 +8460,10 @@
 	    value: function getSlides() {
 	      var countLength = this.videoSource.length;
 	      var slideCollection = [];
-	      var counter = 0;
 	      for (var i = 0; i < countLength; i++) {
-	        var currentVid = $('.slide-' + counter)[0];
+	        var currentVid = $('.slide-' + i)[0];
 	        slideCollection.push(currentVid);
-	        counter++;
+	        i++;
 	      }
 	      return slideCollection;
 
@@ -8493,13 +8490,9 @@
 	    key: 'addVideosToSlides',
 	    value: function addVideosToSlides(suff, elem) {
 	      var newSlide = '<div class="slide-' + suff + ' slide"></div>';
-
 	      var textContent = '\n      <div class="text-content-' + suff + '">\n        <h3 class="video-title">' + this.titles[suff] + '</h3>\n        <p class="video-description">' + this.copy[suff] + '</p>\n      </div>';
-
 	      this.videoContainer.append(newSlide).css('display', 'flex');
-
 	      var currentVideo = '<video id="my_video_' + suff + '" data-video="' + suff + '" src="' + elem + '" controls preload="auto" class="vid_' + suff + '"></video>';
-
 	      if (suff === 0) {
 	        $('.slide-' + suff).append(currentVideo).append(textContent);
 	      } else {
