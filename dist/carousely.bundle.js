@@ -8219,7 +8219,7 @@
 
 	            case 6:
 	              _context.next = 8;
-	              return this.addHoverStateToDots();
+	              return this.addHoverLogicToDots();
 
 	            case 8:
 	              _context.next = 10;
@@ -8227,7 +8227,7 @@
 
 	            case 10:
 	              _context.next = 12;
-	              return this.recusivelyPlaySlides();
+	              return this.recursivelyPlaySlides();
 
 	            case 12:
 	            case 'end':
@@ -8241,22 +8241,22 @@
 	    value: function renderSlideHTML() {
 	      var _this = this;
 
-	      var counterLength = this.videoSource.length;
-	      var sourceAttributes = this.videoSource;
-	      var suffix = 0;
-	      sourceAttributes.map(function (el, i) {
-	        _this.addVideosToSlides(suffix, el);
-	        suffix++;
+	      var numberOfVideos = this.videoSource.length;
+	      var videos = this.videoSource;
+	      var uniqueId = 0;
+	      videos.forEach(function (videoSourcePath, i) {
+	        _this.addVideosToSlides(uniqueId, videoSourcePath);
+	        uniqueId++;
 	      });
 	    }
 	  }, {
 	    key: 'sourceVideos',
 	    value: function sourceVideos() {
-	      var countLength = this.videoSource.length;
+	      var numberOfVideos = this.videoSource.length;
 	      var videoCollection = [];
 	      var counter = 0;
 	      return new Promise(function (resolve, reject) {
-	        for (var i = 0; i < countLength; i++) {
+	        for (var i = 0; i < numberOfVideos; i++) {
 	          var currentVid = document.getElementById('my_video_' + counter);
 	          videoCollection.push(currentVid);
 	          counter++;
@@ -8269,14 +8269,14 @@
 	    value: function renderDotHTML() {
 	      var _this2 = this;
 
-	      var vidz = this.videoSource;
-	      vidz.map(function (el, i) {
+	      var videos = this.videoSource;
+	      videos.map(function (el, i) {
 	        if (i + 1 > 0) _this2.printDot(i);
 	      });
 	    }
 	  }, {
-	    key: 'addHoverStateToDots',
-	    value: function addHoverStateToDots() {
+	    key: 'addHoverLogicToDots',
+	    value: function addHoverLogicToDots() {
 	      var _this3 = this;
 
 	      var dot = $('.dot').get();
@@ -8330,61 +8330,57 @@
 	      videoOne.play();
 	    }
 	  }, {
-	    key: 'recusivelyPlaySlides',
-	    value: function recusivelyPlaySlides() {
-	      var vidz = this.sourceVideos();
-	      var slidez = this.getSlides();
-	      this.sourceVideos().then(function (vidz) {
-	        var _loop = function _loop() {
-	          var next = vidz[i + 1],
-	              prev = vidz[i - 1],
-	              curr = vidz[i],
-	              currSlide = $('.slide-' + i)[0],
-	              nextSlide = $('.slide-' + (i + 1))[0],
-	              prevSlide = $('.slide-' + (i - 1))[0];
-	          if (typeof vidz[i + 1] != 'undefined') {
-	            (function () {
-	              var playNextSlide = function playNextSlide() {
-	                currSlide.style.display = "none";
-	                nextSlide.style.display = "flex";
-	                next.style.display = "flex";
-	                next.play();
-	              };
+	    key: 'recursivelyPlaySlides',
+	    value: function recursivelyPlaySlides() {
+	      var _this4 = this;
 
-	              vidz[i].addEventListener('ended', function () {
-	                playNextSlide();
-	              });
-	            })();
+	      var videos = this.sourceVideos();
+	      var slides = this.getSlides();
+	      this.sourceVideos().then(function (videos) {
+	        var _loop = function _loop(i) {
+	          var currentSlide = $('.slide-' + i)[0];
+	          var nextSlide = $('.slide-' + (i + 1))[0];
+	          var nextVideo = videos[i + 1];
+	          var firstVideo = videos[0];
+	          var firstSlide = slides[0];
+	          if (videos[i + 1]) {
+	            videos[i].addEventListener('ended', function () {
+	              _this4.playNextSlide(currentSlide, nextSlide, nextVideo);
+	            });
 	          } else {
-	            (function () {
-	              var playFirstSlide = function playFirstSlide() {
-	                currSlide.style.display = "none";
-	                slideUno.style.display = 'flex';
-	                vidUno.style.display = "flex";
-	                vidUno.play();
-	              };
-
-	              var vidUno = vidz[0];
-	              var slideUno = slidez[0];
-
-	              vidz[i].addEventListener('ended', function () {
-	                playFirstSlide();
-	              });
-	            })();
+	            videos[i].addEventListener('ended', function () {
+	              _this4.playFirstSlide(currentSlide, firstSlide, firstVideo);
+	            });
 	          }
 	        };
 
-	        for (var i = 0; i < vidz.length; i++) {
-	          _loop();
+	        for (var i = 0; i < videos.length; i++) {
+	          _loop(i);
 	        }
 	      });
 	    }
 	  }, {
+	    key: 'playNextSlide',
+	    value: function playNextSlide(currentSlide, nextSlide, nextVideo) {
+	      currentSlide.style.display = "none";
+	      nextSlide.style.display = "flex";
+	      nextVideo.style.display = "flex";
+	      nextVideo.play();
+	    }
+	  }, {
+	    key: 'playFirstSlide',
+	    value: function playFirstSlide(currentSlide, firstSlide, firstVideo) {
+	      currentSlide.style.display = "none";
+	      firstSlide.style.display = 'flex';
+	      firstVideo.style.display = "flex";
+	      firstVideo.play();
+	    }
+	  }, {
 	    key: 'getSlides',
 	    value: function getSlides() {
-	      var countLength = this.videoSource.length;
+	      var numberOfVideos = this.videoSource.length;
 	      var slideCollection = [];
-	      for (var i = 0; i < countLength; i++) {
+	      for (var i = 0; i < numberOfVideos; i++) {
 	        var currentVid = $('.slide-' + i)[0];
 	        slideCollection.push(currentVid);
 	        i++;
@@ -8393,12 +8389,12 @@
 	    }
 	  }, {
 	    key: 'addVideosToSlides',
-	    value: function addVideosToSlides(suff, elem) {
-	      var newSlide = '<div class="slide-' + suff + ' slide"></div>';
+	    value: function addVideosToSlides(uniqueId, videoSource) {
+	      var newSlide = '<div class="slide-' + uniqueId + ' slide"></div>';
 	      this.videoContainer.append(newSlide).css('display', 'flex');
-	      var textContent = '<div class="text-content-' + suff + '"><h3 class="video-title">' + this.titles[suff] + '</h3><p class="video-description">' + this.copy[suff] + '</p></div>';
-	      var currentVideo = '<video id="my_video_' + suff + '" data-video="' + suff + '" src="' + elem + '" controls preload="auto" class="vid_' + suff + '"></video>';
-	      if (suff === 0) $('.slide-' + suff).append(currentVideo).append(textContent);else $('.slide-' + suff).append(currentVideo).append(textContent).css('display', 'none');
+	      var textContent = '<div class="text-content-' + uniqueId + '"><h3 class="video-title">' + this.titles[uniqueId] + '</h3><p class="video-description">' + this.copy[uniqueId] + '</p></div>';
+	      var currentVideo = '<video id="my_video_' + uniqueId + '" data-video="' + uniqueId + '" src="' + videoSource + '" controls preload="auto" class="vid_' + uniqueId + '"></video>';
+	      if (uniqueId === 0) $('.slide-' + uniqueId).append(currentVideo).append(textContent);else $('.slide-' + uniqueId).append(currentVideo).append(textContent).css('display', 'none');
 	    }
 	  }, {
 	    key: 'printDot',
@@ -8420,7 +8416,7 @@
 
 	try {
 	  for (var _iterator = carouselGenerator[Symbol.iterator](), _step; !(_iteratorNormalCompletion = (_step = _iterator.next()).done); _iteratorNormalCompletion = true) {
-	    var _next = _step.value;
+	    var carouselFunction = _step.value;
 
 	    carouselGenerator.next();
 	  }

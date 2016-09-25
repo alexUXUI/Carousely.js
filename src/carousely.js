@@ -13,42 +13,41 @@ class Carousel {
     yield this.renderSlideHTML()
     yield this.sourceVideos()
     yield this.renderDotHTML()
-    yield this.addHoverStateToDots()
+    yield this.addHoverLogicToDots()
     yield this.playFirstVideo()
-    yield this.recusivelyPlaySlides()
+    yield this.recursivelyPlaySlides()
   }
 
   renderSlideHTML() {
-    const counterLength = this.videoSource.length;
-    var sourceAttributes = this.videoSource;
-    let suffix = 0;
-    sourceAttributes.map((el, i) => {
-      this.addVideosToSlides(suffix, el)
-      suffix++
+    const numberOfVideos = this.videoSource.length;
+    var videos = this.videoSource;
+    let uniqueId = 0;
+    videos.forEach((videoSourcePath, i) => {
+      this.addVideosToSlides(uniqueId, videoSourcePath)
+      uniqueId++
     })
   }
 
   sourceVideos() {
-    const countLength = this.videoSource.length;
-    var videoCollection = []
+    const numberOfVideos = this.videoSource.length;
+    let videoCollection = []
     let counter = 0
-    return new Promise(function(resolve, reject) {
-      for(var i = 0; i < countLength; i++){
-        var currentVid = document.getElementById(`my_video_${ counter }`)
+    return new Promise((resolve, reject) => {
+      for(let i = 0; i < numberOfVideos; i++){
+        let currentVid = document.getElementById(`my_video_${ counter }`)
         videoCollection.push(currentVid)
         counter++
       }
       resolve(videoCollection)
-
     })
   }
 
   renderDotHTML() {
-    var vidz = this.videoSource;
-    vidz.map((el, i) => { if(i + 1 > 0) this.printDot(i) })
+    var videos = this.videoSource;
+    videos.map((el, i) => { if(i + 1 > 0) this.printDot(i) })
   }
 
-  addHoverStateToDots() {
+  addHoverLogicToDots() {
     var dot = $('.dot').get()
     dot.forEach((dot) => {
       dot.addEventListener('mouseover', (e) => {
@@ -79,14 +78,14 @@ class Carousel {
     return new Promise((resolve, reject) => {
       videos.map((el, i) => {
         if (!el.paused) {
-          var dataObject = {}
+          let dataObject = {}
           dataObject.currentlyPlaying = el
           dataObject.jQueryObj = $(el)
           dataObject.currentVideoIndex = i
           resolve(dataObject)
         } if (el.paused) {
-          var currentlyPaused = el.getAttribute('data-video')
-          var hideMe = document.getElementsByClassName(`slide-${ currentlyPaused }`)[0]
+          let currentlyPaused = el.getAttribute('data-video')
+          let hideMe = document.getElementsByClassName(`slide-${ currentlyPaused }`)[0]
           hideMe.style.display = 'none'
         }
       })
@@ -94,66 +93,65 @@ class Carousel {
   }
 
   playFirstVideo() {
-    var videoOne = document.getElementById("my_video_0")
+    const videoOne = document.getElementById("my_video_0")
     videoOne.play()
   }
 
-  recusivelyPlaySlides() {
-    var vidz = this.sourceVideos()
-    var slidez = this.getSlides()
-    this.sourceVideos().then((vidz) => {
-      for(var i = 0; i < vidz.length; i++) {
-        let next = vidz[i + 1],
-            prev = vidz[i - 1],
-            curr = vidz[i],
-            currSlide = $(`.slide-${ i }`)[0],
-            nextSlide = $(`.slide-${ i + 1 }`)[0],
-            prevSlide = $(`.slide-${ i - 1 }`)[0]
-        if(typeof vidz[i + 1] != 'undefined') {
-          function playNextSlide() {
-            currSlide.style.display = "none"
-            nextSlide.style.display = "flex"
-            next.style.display = "flex"
-            next.play();
-          }
-          vidz[i].addEventListener('ended', () => {
-            playNextSlide()
+  recursivelyPlaySlides() {
+    var videos = this.sourceVideos()
+    var slides = this.getSlides()
+    this.sourceVideos().then((videos) => {
+      for(let i = 0; i < videos.length; i++) {
+        let currentSlide = $(`.slide-${ i }`)[0]
+        let nextSlide = $(`.slide-${ i + 1 }`)[0]
+        let nextVideo = videos[i + 1]
+        let firstVideo = videos[0]
+        let firstSlide = slides[0]
+        if(videos[i + 1]) {
+          videos[i].addEventListener('ended', () => {
+            this.playNextSlide(currentSlide, nextSlide, nextVideo)
           })
         } else {
-          let vidUno = vidz[0]
-          let slideUno = slidez[0]
-          function playFirstSlide() {
-            currSlide.style.display = "none"
-            slideUno.style.display = 'flex'
-            vidUno.style.display = "flex"
-            vidUno.play()
-          }
-          vidz[i].addEventListener('ended', () => {
-            playFirstSlide()
+          videos[i].addEventListener('ended', () => {
+            this.playFirstSlide(currentSlide, firstSlide, firstVideo)
           })
         }
       }
     })
   }
 
+  playNextSlide(currentSlide, nextSlide, nextVideo) {
+    currentSlide.style.display = "none"
+    nextSlide.style.display = "flex"
+    nextVideo.style.display = "flex"
+    nextVideo.play();
+  }
+
+  playFirstSlide(currentSlide, firstSlide, firstVideo) {
+    currentSlide.style.display = "none"
+    firstSlide.style.display = 'flex'
+    firstVideo.style.display = "flex"
+    firstVideo.play()
+  }
+
   getSlides() {
-    var countLength = this.videoSource.length
+    const numberOfVideos = this.videoSource.length
     var slideCollection = []
-    for(var i = 0; i < countLength; i++) {
-      var currentVid = $(`.slide-${ i }`)[0]
+    for(let i = 0; i < numberOfVideos; i++) {
+      let currentVid = $(`.slide-${ i }`)[0]
       slideCollection.push(currentVid)
       i++
     }
     return slideCollection
   }
 
-  addVideosToSlides(suff, elem) {
-    let newSlide = `<div class="slide-${ suff } slide"></div>`
+  addVideosToSlides(uniqueId, videoSource) {
+    let newSlide = `<div class="slide-${ uniqueId } slide"></div>`
     this.videoContainer.append(newSlide).css('display', 'flex')
-    let textContent = `<div class="text-content-${ suff }"><h3 class="video-title">${ this.titles[ suff ] }</h3><p class="video-description">${ this.copy[ suff ] }</p></div>`
-    let currentVideo = `<video id="my_video_${ suff }" data-video="${ suff }" src="${ elem }" controls preload="auto" class="vid_${ suff }"></video>`
-    if (suff === 0) $(`.slide-${ suff }`).append(currentVideo).append(textContent)
-    else $(`.slide-${ suff }`).append(currentVideo).append(textContent).css('display', 'none')
+    let textContent = `<div class="text-content-${ uniqueId }"><h3 class="video-title">${ this.titles[ uniqueId ] }</h3><p class="video-description">${ this.copy[ uniqueId ] }</p></div>`
+    let currentVideo = `<video id="my_video_${ uniqueId }" data-video="${ uniqueId }" src="${ videoSource }" controls preload="auto" class="vid_${ uniqueId }"></video>`
+    if (uniqueId === 0) $(`.slide-${ uniqueId }`).append(currentVideo).append(textContent)
+    else $(`.slide-${ uniqueId }`).append(currentVideo).append(textContent).css('display', 'none')
   }
 
   printDot(index) {
@@ -165,6 +163,6 @@ const slideContent = require('./carousely.config.js')
 const carousel = new Carousel(slideContent)
 const carouselGenerator = carousel.startCarousel()
 
-for(let next of carouselGenerator){
+for(let carouselFunction of carouselGenerator){
   carouselGenerator.next()
 }
