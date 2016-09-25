@@ -1,15 +1,5 @@
-/*
- * @input object of arrays containing
- *  copy, title, and video src path
- *  @output returns an html slide and dot for each video
- */
 class Carousel {
 
- /*
-  * @input DOM node for video
-  * @input DOM node for dots
-  * @input content for video and text
-  */
   constructor(content) {
     this.videoContainer =  $('.vid-container')
     this.dotContainer = $('.dots')
@@ -19,12 +9,6 @@ class Carousel {
     this.copy = content.copy
   }
 
- /*
-  * Builds the html, appends the content to them,
-  * adds dot to the dom, attaches controllers to their hover states
-  * plays the fist video on page load. On end each video, play the next
-  * video. If no next video play the first vido.
-  */
   *startCarousel () {
     yield this.renderSlideHTML()
     yield this.sourceVideos()
@@ -56,15 +40,6 @@ class Carousel {
       }
       resolve(videoCollection)
 
-      // this should also return the state of the array
-      /* to do at work tomrrow
-
-        next
-        current
-        prev
-
-      */
-
     })
   }
 
@@ -73,12 +48,6 @@ class Carousel {
     vidz.map((el, i) => { if(i + 1 > 0) this.printDot(i) })
   }
 
-  /*
-   * 1. get all the dots from the dom
-   * 2. Iterate over them adding eventlisteners for hover
-   * 3. On hover, pause currently playing video
-   * 3. A) and play the video of the dot you hovered over
-  */
   addHoverStateToDots() {
     var dot = $('.dot').get()
     dot.forEach((dot) => {
@@ -167,9 +136,6 @@ class Carousel {
     })
   }
 
- /*
-  * Helper methods, these get called by other methods w/i this class
-  **/
   getSlides() {
     var countLength = this.videoSource.length
     var slideCollection = []
@@ -181,16 +147,6 @@ class Carousel {
     return slideCollection
   }
 
-  /*
-   * 1) Creates a new slide element for all the content
-   * 2) Creates a new element for title and description text and passes:
-   *  - Title text to <h3 class="video-title">
-   *  - Description text to <p class="video-description">
-   * 3) Appends the slide to the video container
-   * 4) Passes a video soure path to the video element
-   * 5) Creates a video element called 'currentVideo'
-   * 6) Append the text content to the
-   */
   addVideosToSlides(suff, elem) {
     let newSlide = `<div class="slide-${ suff } slide"></div>`
     this.videoContainer.append(newSlide).css('display', 'flex')

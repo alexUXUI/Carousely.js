@@ -8187,18 +8187,7 @@
 
 	function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
 
-	/*
-	 * @input object of arrays containing
-	 *  copy, title, and video src path
-	 *  @output returns an html slide and dot for each video
-	 */
 	var Carousel = function () {
-
-	  /*
-	   * @input DOM node for video
-	   * @input DOM node for dots
-	   * @input content for video and text
-	   */
 	  function Carousel(content) {
 	    _classCallCheck(this, Carousel);
 
@@ -8209,14 +8198,6 @@
 	    this.titles = content.title;
 	    this.copy = content.copy;
 	  }
-
-	  /*
-	   * Builds the html, appends the content to them,
-	   * adds dot to the dom, attaches controllers to their hover states
-	   * plays the fist video on page load. On end each video, play the next
-	   * video. If no next video play the first vido.
-	   */
-
 
 	  _createClass(Carousel, [{
 	    key: 'startCarousel',
@@ -8281,13 +8262,6 @@
 	          counter++;
 	        }
 	        resolve(videoCollection);
-
-	        // this should also return the state of the array
-	        /* to do at work tomrrow
-	           next
-	          current
-	          prev
-	         */
 	      });
 	    }
 	  }, {
@@ -8300,14 +8274,6 @@
 	        if (i + 1 > 0) _this2.printDot(i);
 	      });
 	    }
-
-	    /*
-	     * 1. get all the dots from the dom
-	     * 2. Iterate over them adding eventlisteners for hover
-	     * 3. On hover, pause currently playing video
-	     * 3. A) and play the video of the dot you hovered over
-	    */
-
 	  }, {
 	    key: 'addHoverStateToDots',
 	    value: function addHoverStateToDots() {
@@ -8413,11 +8379,6 @@
 	        }
 	      });
 	    }
-
-	    /*
-	     * Helper methods, these get called by other methods w/i this class
-	     **/
-
 	  }, {
 	    key: 'getSlides',
 	    value: function getSlides() {
@@ -8430,18 +8391,6 @@
 	      }
 	      return slideCollection;
 	    }
-
-	    /*
-	     * 1) Creates a new slide element for all the content
-	     * 2) Creates a new element for title and description text and passes:
-	     *  - Title text to <h3 class="video-title">
-	     *  - Description text to <p class="video-description">
-	     * 3) Appends the slide to the video container
-	     * 4) Passes a video soure path to the video element
-	     * 5) Creates a video element called 'currentVideo'
-	     * 6) Append the text content to the
-	     */
-
 	  }, {
 	    key: 'addVideosToSlides',
 	    value: function addVideosToSlides(suff, elem) {
