@@ -1,25 +1,3 @@
-const content = {
-  copy:  [
-    'lorem ispsum dolor 1',
-    'lorem ispsum dolor 2',
-    'lorem ispsum dolor 3',
-    'lorem ispsum dolor 4'
-  ],
-  title: [
-    'title ispsum dolor 1',
-    'title ispsum dolor 2',
-    'title ispsum dolor 3',
-    'title ispsum dolor 4'
-  ],
-  links: [
-    'http://vjs.zencdn.net/v/oceans.mp4',
-    'http://vjs.zencdn.net/v/oceans.mp4',
-    'http://vjs.zencdn.net/v/oceans.mp4',
-    'http://vjs.zencdn.net/v/oceans.mp4',
-    'http://vjs.zencdn.net/v/oceans.mp4'
-  ]
-}
-
 /*
  * @input object of arrays containing
  *  copy, title, and video src path
@@ -189,7 +167,6 @@ class Carousel {
           // get all the dots
           //
           //
-          $('body').css('background-color', 'red');
         // if the video is paused and the user scrolls over any button that
         // does not equal the number of the dot
 
@@ -294,13 +271,10 @@ class Carousel {
   }
 }
 
-var carousel = new Carousel(content)
-var carouselGenerator = carousel.startCarousel()
+const slideContent = require('./carousely.config.js')
+const carousel = new Carousel(slideContent)
+const carouselGenerator = carousel.startCarousel()
 
-function carouselStepThrough() {
-  for(var j = 0; j < 6; j++){
-    carouselGenerator.next()
-  }
+for(let next of carouselGenerator){
+  carouselGenerator.next()
 }
-
-carouselStepThrough()
