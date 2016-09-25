@@ -137,8 +137,6 @@ var carousel = new Carousel(content)
 - if the user manually pauses a video and scrolls over another, the
 paused video does not disappear
 
-- remove magic number 6 that steps through the generator
-
 - end infinite recursion --> make this configurable
 
 - data object not good in that each array should contain a slide's
