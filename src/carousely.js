@@ -58,21 +58,28 @@ class Carousel {
           let slideNumber = videoData.attr('data-video')
           if (dotNumber === slideNumber) {
             data.currentlyPlaying.play()
+            // give active color to dot
+            $(`.dot-${ dotNumber }`).css('background-color', 'red')
+            console.log(`add color to this dot ${ dotNumber}`);
           } else {
             data.currentlyPlaying.pause()
             data.currentlyPlaying.parentNode.style.display = 'none'
+            // take active color away from dot
+            $(`.dot-${ dotNumber }`).css('background-color', 'black')
           }
         })
         this.sourceVideos().then(function(videoToPlay){
           var nextVideo = videoToPlay[dotNumber]
           nextVideo.parentNode.style.display = "block"
           nextVideo.play()
+          // add active color to dot
+          $(`.dot-${ dotNumber }`).css('background-color', 'red')
         })
       })
     })
   }
 
-  currentlyPlayingVideo(){
+  currentlyPlayingVideo() {
     var videos = $("[id^=my_video_]").get()
     var currentlyPlaying
     return new Promise((resolve, reject) => {
@@ -95,11 +102,15 @@ class Carousel {
   playFirstVideo() {
     const videoOne = document.getElementById("my_video_0")
     videoOne.play()
+    // give first dot color
+    $(`.dot-${ 0 }`).css('background-color', 'red')
+
   }
 
   recursivelyPlaySlides() {
     var videos = this.sourceVideos()
     var slides = this.getSlides()
+    var dots = $('.dot')
     this.sourceVideos().then((videos) => {
       for(let i = 0; i < videos.length; i++) {
         let currentSlide = $(`.slide-${ i }`)[0]
@@ -107,23 +118,30 @@ class Carousel {
         let nextVideo = videos[i + 1]
         let firstVideo = videos[0]
         let firstSlide = slides[0]
-        if(videos[i + 1]) videos[i].addEventListener('ended', () => this.playNextSlide(currentSlide, nextSlide, nextVideo))
-        else videos[i].addEventListener('ended', () => this.playFirstSlide(currentSlide, firstSlide, firstVideo)) 
+        let firstDot = dots[0]
+        let currentDot = dots[i]
+        let nextDot = dots[i + 1]
+        if(videos[i + 1]) videos[i].addEventListener('ended', () => this.playNextSlide(currentSlide, nextSlide, nextVideo, currentDot, nextDot))
+        else videos[i].addEventListener('ended', () => this.playFirstSlide(currentSlide, firstSlide, firstVideo, currentDot, nextDot))
       }
     })
   }
 
-  playNextSlide(currentSlide, nextSlide, nextVideo) {
+  playNextSlide(currentSlide, nextSlide, nextVideo, currentDot, nextDot) {
     currentSlide.style.display = "none"
     nextSlide.style.display = "flex"
     nextVideo.style.display = "flex"
+    currentDot.style.backgroundColor = 'black'
+    nextDot.style.backgroundColor = 'red'
     nextVideo.play();
   }
 
-  playFirstSlide(currentSlide, firstSlide, firstVideo) {
+  playFirstSlide(currentSlide, firstSlide, firstVideo, currentDot, firstDot) {
     currentSlide.style.display = "none"
     firstSlide.style.display = 'flex'
     firstVideo.style.display = "flex"
+    currentDot.style.backgroundColor = 'black'
+    firstDot.style.backgroundColor = 'red'
     firstVideo.play()
   }
 
@@ -142,13 +160,14 @@ class Carousel {
     let newSlide = `<div class="slide-${ uniqueId } slide"></div>`
     this.videoContainer.append(newSlide).css('display', 'flex')
     let textContent = `<div class="text-content-${ uniqueId }"><h3 class="video-title">${ this.titles[ uniqueId ] }</h3><p class="video-description">${ this.copy[ uniqueId ] }</p></div>`
-    let currentVideo = `<video id="my_video_${ uniqueId }" data-video="${ uniqueId }" src="${ videoSource }" controls preload="auto" class="vid_${ uniqueId }"></video>`
+    let currentVideo = `<video id="my_video_${ uniqueId }" data-video="${ uniqueId }" src="${ videoSource }" controls preload="auto" muted class="vid_${ uniqueId }"></video>`
     if (uniqueId === 0) $(`.slide-${ uniqueId }`).append(currentVideo).append(textContent)
     else $(`.slide-${ uniqueId }`).append(currentVideo).append(textContent).css('display', 'none')
   }
 
   printDot(index) {
     this.dotContainer.append(`<div class="dot-${ index } dot" data-dot="${ index }">•</div>`)
+    // dot is one add color
   }
 }
 

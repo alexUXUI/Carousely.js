@@ -8289,15 +8289,22 @@
 	            var slideNumber = videoData.attr('data-video');
 	            if (dotNumber === slideNumber) {
 	              data.currentlyPlaying.play();
+	              // give active color to dot
+	              $('.dot-' + dotNumber).css('background-color', 'red');
+	              console.log('add color to this dot ' + dotNumber);
 	            } else {
 	              data.currentlyPlaying.pause();
 	              data.currentlyPlaying.parentNode.style.display = 'none';
+	              // take active color away from dot
+	              $('.dot-' + dotNumber).css('background-color', 'black');
 	            }
 	          });
 	          _this3.sourceVideos().then(function (videoToPlay) {
 	            var nextVideo = videoToPlay[dotNumber];
 	            nextVideo.parentNode.style.display = "block";
 	            nextVideo.play();
+	            // add active color to dot
+	            $('.dot-' + dotNumber).css('background-color', 'red');
 	          });
 	        });
 	      });
@@ -8328,6 +8335,8 @@
 	    value: function playFirstVideo() {
 	      var videoOne = document.getElementById("my_video_0");
 	      videoOne.play();
+	      // give first dot color
+	      $('.dot-' + 0).css('background-color', 'red');
 	    }
 	  }, {
 	    key: 'recursivelyPlaySlides',
@@ -8336,6 +8345,7 @@
 
 	      var videos = this.sourceVideos();
 	      var slides = this.getSlides();
+	      var dots = $('.dot');
 	      this.sourceVideos().then(function (videos) {
 	        var _loop = function _loop(i) {
 	          var currentSlide = $('.slide-' + i)[0];
@@ -8343,10 +8353,13 @@
 	          var nextVideo = videos[i + 1];
 	          var firstVideo = videos[0];
 	          var firstSlide = slides[0];
+	          var firstDot = dots[0];
+	          var currentDot = dots[i];
+	          var nextDot = dots[i + 1];
 	          if (videos[i + 1]) videos[i].addEventListener('ended', function () {
-	            return _this4.playNextSlide(currentSlide, nextSlide, nextVideo);
+	            return _this4.playNextSlide(currentSlide, nextSlide, nextVideo, currentDot, nextDot);
 	          });else videos[i].addEventListener('ended', function () {
-	            return _this4.playFirstSlide(currentSlide, firstSlide, firstVideo);
+	            return _this4.playFirstSlide(currentSlide, firstSlide, firstVideo, currentDot, nextDot);
 	          });
 	        };
 
@@ -8357,18 +8370,22 @@
 	    }
 	  }, {
 	    key: 'playNextSlide',
-	    value: function playNextSlide(currentSlide, nextSlide, nextVideo) {
+	    value: function playNextSlide(currentSlide, nextSlide, nextVideo, currentDot, nextDot) {
 	      currentSlide.style.display = "none";
 	      nextSlide.style.display = "flex";
 	      nextVideo.style.display = "flex";
+	      currentDot.style.backgroundColor = 'black';
+	      nextDot.style.backgroundColor = 'red';
 	      nextVideo.play();
 	    }
 	  }, {
 	    key: 'playFirstSlide',
-	    value: function playFirstSlide(currentSlide, firstSlide, firstVideo) {
+	    value: function playFirstSlide(currentSlide, firstSlide, firstVideo, currentDot, firstDot) {
 	      currentSlide.style.display = "none";
 	      firstSlide.style.display = 'flex';
 	      firstVideo.style.display = "flex";
+	      currentDot.style.backgroundColor = 'black';
+	      firstDot.style.backgroundColor = 'red';
 	      firstVideo.play();
 	    }
 	  }, {
@@ -8389,13 +8406,14 @@
 	      var newSlide = '<div class="slide-' + uniqueId + ' slide"></div>';
 	      this.videoContainer.append(newSlide).css('display', 'flex');
 	      var textContent = '<div class="text-content-' + uniqueId + '"><h3 class="video-title">' + this.titles[uniqueId] + '</h3><p class="video-description">' + this.copy[uniqueId] + '</p></div>';
-	      var currentVideo = '<video id="my_video_' + uniqueId + '" data-video="' + uniqueId + '" src="' + videoSource + '" controls preload="auto" class="vid_' + uniqueId + '"></video>';
+	      var currentVideo = '<video id="my_video_' + uniqueId + '" data-video="' + uniqueId + '" src="' + videoSource + '" controls preload="auto" muted class="vid_' + uniqueId + '"></video>';
 	      if (uniqueId === 0) $('.slide-' + uniqueId).append(currentVideo).append(textContent);else $('.slide-' + uniqueId).append(currentVideo).append(textContent).css('display', 'none');
 	    }
 	  }, {
 	    key: 'printDot',
 	    value: function printDot(index) {
 	      this.dotContainer.append('<div class="dot-' + index + ' dot" data-dot="' + index + '">•</div>');
+	      // dot is one add color
 	    }
 	  }]);
 
