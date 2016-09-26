@@ -20,7 +20,7 @@ Based on the data you give, carousely.js will create slides with three component
 <div class="dots"></div>
 ```
 
-##### 3) Create an object for your content data
+##### 3) In `./src/carousely.config.js` Create an object for your content data
 
 The object should contain three _even_ arrays and one number, setting the number of times the slideshow sould play.
 
@@ -104,7 +104,13 @@ Inspect the video and dot containers to find that Carousely has generated the fo
 </div>
 ```
 
+##### 7) To build the js using webpack type in your console
+```bash
+$ webpack -p
+```
+
+Leave this process open and the webpack dev server will watch for changes and recompile.
 #### known bugs
 
-- data object not good in that each array should contain a slide's
+- data object not optimal in that each array should contain a slide's
 content, not one slide pulling form 3 arrays
