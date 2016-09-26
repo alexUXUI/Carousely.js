@@ -53,7 +53,7 @@ carousely.playCarousel()
 
 ##### 5) To style a specific slide or add logic / behavior to a specific video object
 
-> You can hook into any slide or video node with the naming conventions used in the slide rendering functions.
+> You can hook into _any_ slide or video node with the naming conventions.
 
 Class names for slides have a prefix of `.slide-` and a suffix of [number]
 
