@@ -79,20 +79,20 @@ Inspect the video and dot containers to find that Carousely has generated the fo
 
 ```html
 <div class="vid-container" style="display: flex;">
-  <div class="slide-0 slide" data-slide="0" style="display: block;">
+  <article class="slide-0 slide" data-slide="0" style="display: block;">
     <video id="my_video_0" data-video="0" src="http://vjs.zencdn.net/v/oceans.mp4" style="display: block;"></video>
-    <div class="text-content-0">
+    <section class="text-content-0">
       <h3 class="video-title">Title 1</h3>
       <p class="video-description">Video description 1</p>
-    </div>
-  </div>
-  <div class="slide-1 slide" style="display: none;">
+    </section>
+  </article>
+  <article class="slide-1 slide" style="display: none;">
     <video id="my_video_1" data-video="1" src="http://vjs.zencdn.net/v/oceans.mp4" controls="" preload="auto" class="vid" style="display: flex;"></video>
-    <div class="text-content-1">
+    <section class="text-content-1">
       <h3 class="video-title">Title 2</h3>
       <p class="video-description">Video description 2</p>
-    </div>
-  </div>
+    </section>
+  </article>
 </div>
 ```
 ###### As well as the following output for the dot container
