@@ -19,6 +19,13 @@ class Carousel {
     yield this.recursivelyPlaySlides()
   }
 
+  playCarousel() {
+    const carouselGenerator = this.startCarousel()
+    for(let carouselFunction of carouselGenerator){
+      carouselGenerator.next()
+    }
+  }
+
   renderSlideHTML() {
     const numberOfVideos = this.videoSource.length;
     var videos = this.videoSource;
@@ -204,9 +211,6 @@ class Carousel {
 }
 
 const slideContent = require('./carousely.config.js')
-const carousel = new Carousel(slideContent)
-const carouselGenerator = carousel.startCarousel()
+const carousely = new Carousel(slideContent)
 
-for(let carouselFunction of carouselGenerator){
-  carouselGenerator.next()
-}
+module.exports = carousely

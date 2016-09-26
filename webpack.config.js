@@ -1,5 +1,5 @@
 module.exports = {
-  entry: ['babel-polyfill', "./src/carousely.js"],
+  entry: ['babel-polyfill', "./src/carousely.js", "./src/yourapp.js"],
   output: {
     filename: "./dist/carousely.bundle.js"
   },
