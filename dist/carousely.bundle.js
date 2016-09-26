@@ -8363,7 +8363,6 @@
 	          var firstDot = $('.dot-0');
 	          var currentDot = dots[i];
 	          var nextDot = dots[i + 1];
-
 	          if (nextDot) {
 	            videos[i].addEventListener('ended', function () {
 	              _this4.playNextSlide(currentSlide, nextSlide, nextVideo, currentDot, nextDot);
@@ -8371,12 +8370,18 @@
 	            videos[i].addEventListener('play', function () {
 	              $('.dot-' + i).css('background-color', 'red');
 	            });
+	            videos[i].addEventListener('pause', function () {
+	              $('.dot-' + i).css('background-color', 'black');
+	            });
 	          } else {
 	            videos[i].addEventListener('ended', function () {
 	              _this4.playFirstSlide(currentSlide, firstSlide, firstVideo, currentDot, firstDot);
 	            });
 	            videos[i].addEventListener('play', function () {
 	              $('.dot-' + i).css('background-color', 'red');
+	            });
+	            videos[i].addEventListener('pause', function () {
+	              $('.dot-' + i).css('background-color', 'black');
 	            });
 	          }
 	        };

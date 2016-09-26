@@ -127,13 +127,15 @@ class Carousel {
         let firstDot = $('.dot-0')
         let currentDot = dots[i]
         let nextDot = dots[i + 1]
-
         if(nextDot) {
           videos[i].addEventListener('ended', () => {
             this.playNextSlide(currentSlide, nextSlide, nextVideo, currentDot, nextDot)
           })
           videos[i].addEventListener('play', () => {
             $(`.dot-${i}`).css('background-color', 'red')
+          })
+          videos[i].addEventListener('pause', () => {
+            $(`.dot-${i}`).css('background-color', 'black')
           })
         }
         else {
@@ -142,6 +144,9 @@ class Carousel {
           })
           videos[i].addEventListener('play', () => {
             $(`.dot-${i}`).css('background-color', 'red')
+          })
+          videos[i].addEventListener('pause', () => {
+            $(`.dot-${i}`).css('background-color', 'black')
           })
         }
       }
