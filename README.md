@@ -1,10 +1,10 @@
 # Carousely.js
-### A small tool made for building video carousels.
+A tool for building video carousels.
 
 ## How does it work?
 Based on the data you give, carousely.js will create slides with three components: `Title, Video, and Description.`
 
-### How to Set up
+### Set Up:
 
 ##### 1) Include `carousely.js` and `jQuery` in your project
 ```html
@@ -18,10 +18,6 @@ Based on the data you give, carousely.js will create slides with three component
 <div class="vid-container"></div>
 <div class="dots"></div>
 ```
-
-> `The video container will render however many slides you provide content for`
-
-> `The dots container will render a corresponding dot for each slide`
 
 ##### 3) Create an object for your content data
 
@@ -48,17 +44,11 @@ const content = {
 ```
 > `Each array must have the same length for the slides to work`
 
-```javascript
-content.copy.length = 2
-content.title.length = 2
-content.links.length = 2
-```
-
-##### 4) Create a new instance of the carousel class, Pass the content object, full of your data to the carousel instance
+##### 4) Import the source doe from the library and call the `playSLideShow` method to build and play the carousel
 
 ```javascript
-var carousel = new Carousel(content)
-
+var carousely = require('./carousely.js')
+carousely.playCarousel()
 ```
 
 ##### 5) If you wish to style a specific slide or add logic / behavior to a specific video object, you can hook into any slide or video node with the naming conventions used in the slide rendering functions.
