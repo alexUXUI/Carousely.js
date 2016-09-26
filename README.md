@@ -1,7 +1,7 @@
 # Carousely.js
 A tool for building video carousels.
 
-## How does it work?
+### How does it work?
 Based on the data you give, carousely.js will create slides with three components: `Title, Video, and Description.`
 
 ### Set Up:

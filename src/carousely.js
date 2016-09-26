@@ -138,16 +138,14 @@ class Carousel {
           videos[i].addEventListener('ended', () => {
             this.playNextSlide(currentSlide, nextSlide, nextVideo, currentDot, nextDot)
           })
-          videos[i].addEventListener('play', () => { $(`.dot-${i}`).css('background-color', 'red')})
-          videos[i].addEventListener('pause', () => { $(`.dot-${i}`).css('background-color', 'black')})
         }
         else {
           videos[i].addEventListener('ended', () => {
             this.playFirstSlide(currentSlide, firstSlide, firstVideo, currentDot, firstDot)
           })
-          videos[i].addEventListener('play', () => { $(`.dot-${i}`).css('background-color', 'red')})
-          videos[i].addEventListener('pause', () => { $(`.dot-${i}`).css('background-color', 'black')})
         }
+        videos[i].addEventListener('play', () => { $(`.dot-${i}`).css('background-color', 'red')})
+        videos[i].addEventListener('pause', () => { $(`.dot-${i}`).css('background-color', 'black')})
       }
     })
   }
