@@ -6,21 +6,21 @@ Based on the data you give, carousely.js will create slides with three component
 
 ### Set Up:
 
-##### 1) Include `carousely.js`, `jQuery`, and your application logic (`yourapp.js`)
+#### 1) Include `carousely.js`, `jQuery`, and your application logic (`yourapp.js`)
 ```html
 <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.3/jquery.min.js"></script>
 <script type="text/javascript" src="./carousely.js"></script>
 <script type="text/javascript" src="./yourapp.js"></script>
 ```
 
-##### 2) Add two lines of HTML to your page where you want the video carousel
+#### 2) Add two lines of HTML to your page where you want the video carousel
 
 ```html
 <div class="vid-container"></div>
 <div class="dots"></div>
 ```
 
-##### 3) In `./src/carousely.config.js` Create an object for your content data
+#### 3) In `./src/carousely.config.js` Create an object for your content data
 
 The object should contain three _even_ arrays and one number, setting the number of times the slideshow sould play.
 
@@ -44,14 +44,14 @@ const content = {
 ```
 > `Each array must have the same length for the slides to work`
 
-##### 4) Import the source code from the library into In `./yourapp.js` and call the `playSlideShow` method to build and play the carousel
+#### 4) Import the source code from the library into In `./yourapp.js` and call the `playSlideShow` method to build and play the carousel
 
 ```javascript
 var carousely = require('./carousely.js')
 carousely.playCarousel()
 ```
 
-##### 5) To style a specific slide or add logic / behavior to a specific video object
+#### 5) To style a specific slide or add logic / behavior to a specific video object
 
 > You can hook into _any_ slide or video node with the naming conventions.
 
@@ -73,7 +73,7 @@ Each slide inherits the base class of `.slide` so you can hook into every slide 
  #my_video_0 { your styles here }
 ```
 
-##### 6) Open the HTML file in your browser.
+#### 6) Open the HTML file in your browser.
 
 Inspect the video and dot containers to find that Carousely has generated the following HTML for the video container.
 
@@ -104,7 +104,7 @@ Inspect the video and dot containers to find that Carousely has generated the fo
 </div>
 ```
 
-##### 7) To build the js using webpack type in your console
+#### 7) To build the js using webpack type in your console
 ```bash
 $ webpack -p
 ```
