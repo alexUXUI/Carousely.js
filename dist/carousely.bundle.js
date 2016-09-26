@@ -8197,6 +8197,7 @@
 	    this.copy = slideContent.copy;
 	    this.videoContainer = $('.vid-container');
 	    this.dotContainer = $('.dots');
+	    this.timesToItateThroughShow = slideContent.repeatNumber;
 	  }
 
 	  _createClass(Carousel, [{
@@ -8219,7 +8220,7 @@
 
 	            case 6:
 	              _context.next = 8;
-	              return this.addHoverStateToDots();
+	              return this.addHoverLogicToDots();
 
 	            case 8:
 	              _context.next = 10;
@@ -8227,7 +8228,7 @@
 
 	            case 10:
 	              _context.next = 12;
-	              return this.recusivelyPlaySlides();
+	              return this.recursivelyPlaySlides();
 
 	            case 12:
 	            case 'end':
@@ -8241,22 +8242,22 @@
 	    value: function renderSlideHTML() {
 	      var _this = this;
 
-	      var counterLength = this.videoSource.length;
-	      var sourceAttributes = this.videoSource;
-	      var suffix = 0;
-	      sourceAttributes.map(function (el, i) {
-	        _this.addVideosToSlides(suffix, el);
-	        suffix++;
+	      var numberOfVideos = this.videoSource.length;
+	      var videos = this.videoSource;
+	      var uniqueId = 0;
+	      videos.forEach(function (videoSourcePath, i) {
+	        _this.addVideosToSlides(uniqueId, videoSourcePath);
+	        uniqueId++;
 	      });
 	    }
 	  }, {
 	    key: 'sourceVideos',
 	    value: function sourceVideos() {
-	      var countLength = this.videoSource.length;
+	      var numberOfVideos = this.videoSource.length;
 	      var videoCollection = [];
 	      var counter = 0;
 	      return new Promise(function (resolve, reject) {
-	        for (var i = 0; i < countLength; i++) {
+	        for (var i = 0; i < numberOfVideos; i++) {
 	          var currentVid = document.getElementById('my_video_' + counter);
 	          videoCollection.push(currentVid);
 	          counter++;
@@ -8269,29 +8270,40 @@
 	    value: function renderDotHTML() {
 	      var _this2 = this;
 
-	      var vidz = this.videoSource;
-	      vidz.map(function (el, i) {
+	      var videos = this.videoSource;
+	      videos.map(function (el, i) {
 	        if (i + 1 > 0) _this2.printDot(i);
 	      });
 	    }
 	  }, {
-	    key: 'addHoverStateToDots',
-	    value: function addHoverStateToDots() {
+	    key: 'addHoverLogicToDots',
+	    value: function addHoverLogicToDots() {
 	      var _this3 = this;
 
 	      var dot = $('.dot').get();
 	      dot.forEach(function (dot) {
-	        dot.addEventListener('mouseover', function (e) {
+	        dot.addEventListener('mouseover' || 'click', function (e) {
 	          var dotNumber = dot.getAttribute('data-dot');
 	          _this3.currentlyPlayingVideo().then(function (data) {
 	            var slideData = data.currentlyPlaying;
 	            var videoData = data.jQueryObj;
 	            var slideNumber = videoData.attr('data-video');
+	            var currentDot = data.currentDot;
+	            var nextDot = data.nextDot;
 	            if (dotNumber === slideNumber) {
-	              data.currentlyPlaying.play();
+	              slideData.play();
 	            } else {
-	              data.currentlyPlaying.pause();
-	              data.currentlyPlaying.parentNode.style.display = 'none';
+	              _this3.getDots().then(function (dot) {
+	                dot.forEach(function (index, dot) {
+	                  if (dot === slideNumber) {
+	                    index.style.backgroundColor = 'red';
+	                  } else {
+	                    index.style.backgroundColor = 'black';
+	                  }
+	                });
+	              });
+	              slideData.pause();
+	              slideData.parentNode.style.display = 'none';
 	            }
 	          });
 	          _this3.sourceVideos().then(function (videoToPlay) {
@@ -8307,6 +8319,7 @@
 	    value: function currentlyPlayingVideo() {
 	      var videos = $("[id^=my_video_]").get();
 	      var currentlyPlaying;
+	      var dots = $('.dot');
 	      return new Promise(function (resolve, reject) {
 	        videos.map(function (el, i) {
 	          if (!el.paused) {
@@ -8314,6 +8327,8 @@
 	            dataObject.currentlyPlaying = el;
 	            dataObject.jQueryObj = $(el);
 	            dataObject.currentVideoIndex = i;
+	            dataObject.currentDot = $(dots[i]);
+	            dataObject.nextDot = $(dots[i + 1]);
 	            resolve(dataObject);
 	          }if (el.paused) {
 	            var currentlyPaused = el.getAttribute('data-video');
@@ -8328,63 +8343,84 @@
 	    value: function playFirstVideo() {
 	      var videoOne = document.getElementById("my_video_0");
 	      videoOne.play();
+	      $('.dot-' + 0).css('background-color', 'red');
 	    }
 	  }, {
-	    key: 'recusivelyPlaySlides',
-	    value: function recusivelyPlaySlides() {
-	      var vidz = this.sourceVideos();
-	      var slidez = this.getSlides();
-	      this.sourceVideos().then(function (vidz) {
-	        var _loop = function _loop() {
-	          var next = vidz[i + 1],
-	              prev = vidz[i - 1],
-	              curr = vidz[i],
-	              currSlide = $('.slide-' + i)[0],
-	              nextSlide = $('.slide-' + (i + 1))[0],
-	              prevSlide = $('.slide-' + (i - 1))[0];
-	          if (typeof vidz[i + 1] != 'undefined') {
-	            (function () {
-	              var playNextSlide = function playNextSlide() {
-	                currSlide.style.display = "none";
-	                nextSlide.style.display = "flex";
-	                next.style.display = "flex";
-	                next.play();
-	              };
+	    key: 'recursivelyPlaySlides',
+	    value: function recursivelyPlaySlides() {
+	      var _this4 = this;
 
-	              vidz[i].addEventListener('ended', function () {
-	                playNextSlide();
-	              });
-	            })();
+	      var videos = this.sourceVideos();
+	      var slides = this.getSlides();
+	      var dots = $('.dot');
+	      this.sourceVideos().then(function (videos) {
+	        var _loop = function _loop(i) {
+	          var currentSlide = $('.slide-' + i)[0];
+	          var nextSlide = $('.slide-' + (i + 1))[0];
+	          var nextVideo = videos[i + 1];
+	          var firstVideo = videos[0];
+	          var firstSlide = slides[0];
+	          var firstDot = $('.dot-0');
+	          var currentDot = dots[i];
+	          var nextDot = dots[i + 1];
+	          if (nextDot) {
+	            videos[i].addEventListener('ended', function () {
+	              _this4.playNextSlide(currentSlide, nextSlide, nextVideo, currentDot, nextDot);
+	            });
+	            videos[i].addEventListener('play', function () {
+	              $('.dot-' + i).css('background-color', 'red');
+	            });
+	            videos[i].addEventListener('pause', function () {
+	              $('.dot-' + i).css('background-color', 'black');
+	            });
 	          } else {
-	            (function () {
-	              var playFirstSlide = function playFirstSlide() {
-	                currSlide.style.display = "none";
-	                slideUno.style.display = 'flex';
-	                vidUno.style.display = "flex";
-	                vidUno.play();
-	              };
-
-	              var vidUno = vidz[0];
-	              var slideUno = slidez[0];
-
-	              vidz[i].addEventListener('ended', function () {
-	                playFirstSlide();
-	              });
-	            })();
+	            videos[i].addEventListener('ended', function () {
+	              _this4.playFirstSlide(currentSlide, firstSlide, firstVideo, currentDot, firstDot);
+	            });
+	            videos[i].addEventListener('play', function () {
+	              $('.dot-' + i).css('background-color', 'red');
+	            });
+	            videos[i].addEventListener('pause', function () {
+	              $('.dot-' + i).css('background-color', 'black');
+	            });
 	          }
 	        };
 
-	        for (var i = 0; i < vidz.length; i++) {
-	          _loop();
+	        for (var i = 0; i < videos.length; i++) {
+	          _loop(i);
 	        }
 	      });
 	    }
 	  }, {
+	    key: 'playNextSlide',
+	    value: function playNextSlide(currentSlide, nextSlide, nextVideo, currentDot, nextDot) {
+	      currentSlide.style.display = "none";
+	      nextSlide.style.display = "flex";
+	      nextVideo.style.display = "flex";
+	      currentDot.style.backgroundColor = 'black';
+	      nextDot.style.backgroundColor = 'red';
+	      nextVideo.play();
+	    }
+	  }, {
+	    key: 'playFirstSlide',
+	    value: function playFirstSlide(currentSlide, firstSlide, firstVideo, currentDot, firstDot) {
+	      if (this.timesToItateThroughShow < 3) {
+	        currentSlide.style.display = "none";
+	        firstSlide.style.display = 'flex';
+	        firstVideo.style.display = "flex";
+	        currentDot.style.backgroundColor = 'black';
+	        $('.dot-0').css('background-color', 'red');
+	        firstVideo.play();
+	      }
+	      this.timesToItateThroughShow++;
+	      console.log('time to iterate through show', this.timesToItateThroughShow);
+	    }
+	  }, {
 	    key: 'getSlides',
 	    value: function getSlides() {
-	      var countLength = this.videoSource.length;
+	      var numberOfVideos = this.videoSource.length;
 	      var slideCollection = [];
-	      for (var i = 0; i < countLength; i++) {
+	      for (var i = 0; i < numberOfVideos; i++) {
 	        var currentVid = $('.slide-' + i)[0];
 	        slideCollection.push(currentVid);
 	        i++;
@@ -8392,13 +8428,25 @@
 	      return slideCollection;
 	    }
 	  }, {
+	    key: 'getDots',
+	    value: function getDots() {
+	      var dots = $('.dot');
+	      var dotCollection = [];
+	      return new Promise(function (resolve, reject) {
+	        dots.map(function (index, element) {
+	          dotCollection.push(element);
+	        });
+	        resolve(dotCollection);
+	      });
+	    }
+	  }, {
 	    key: 'addVideosToSlides',
-	    value: function addVideosToSlides(suff, elem) {
-	      var newSlide = '<div class="slide-' + suff + ' slide"></div>';
+	    value: function addVideosToSlides(uniqueId, videoSource) {
+	      var newSlide = '<div class="slide-' + uniqueId + ' slide"></div>';
 	      this.videoContainer.append(newSlide).css('display', 'flex');
-	      var textContent = '<div class="text-content-' + suff + '"><h3 class="video-title">' + this.titles[suff] + '</h3><p class="video-description">' + this.copy[suff] + '</p></div>';
-	      var currentVideo = '<video id="my_video_' + suff + '" data-video="' + suff + '" src="' + elem + '" controls preload="auto" class="vid_' + suff + '"></video>';
-	      if (suff === 0) $('.slide-' + suff).append(currentVideo).append(textContent);else $('.slide-' + suff).append(currentVideo).append(textContent).css('display', 'none');
+	      var textContent = '<div class="text-content-' + uniqueId + '"><h3 class="video-title">' + this.titles[uniqueId] + '</h3><p class="video-description">' + this.copy[uniqueId] + '</p></div>';
+	      var currentVideo = '<video id="my_video_' + uniqueId + '" data-video="' + uniqueId + '" src="' + videoSource + '" controls preload="auto" muted class="vid_' + uniqueId + '"></video>';
+	      if (uniqueId === 0) $('.slide-' + uniqueId).append(currentVideo).append(textContent);else $('.slide-' + uniqueId).append(currentVideo).append(textContent).css('display', 'none');
 	    }
 	  }, {
 	    key: 'printDot',
@@ -8420,7 +8468,7 @@
 
 	try {
 	  for (var _iterator = carouselGenerator[Symbol.iterator](), _step; !(_iteratorNormalCompletion = (_step = _iterator.next()).done); _iteratorNormalCompletion = true) {
-	    var _next = _step.value;
+	    var carouselFunction = _step.value;
 
 	    carouselGenerator.next();
 	  }
@@ -8453,7 +8501,9 @@
 
 	  title: ['title ispsum dolor 1', 'title ispsum dolor 2', 'title ispsum dolor 3', 'title ispsum dolor 4'],
 
-	  links: ['http://vjs.zencdn.net/v/oceans.mp4', 'http://vjs.zencdn.net/v/oceans.mp4', 'http://vjs.zencdn.net/v/oceans.mp4', 'http://vjs.zencdn.net/v/oceans.mp4', 'http://vjs.zencdn.net/v/oceans.mp4']
+	  links: ['http://vjs.zencdn.net/v/oceans.mp4', 'http://vjs.zencdn.net/v/oceans.mp4', 'http://vjs.zencdn.net/v/oceans.mp4', 'http://vjs.zencdn.net/v/oceans.mp4', 'http://vjs.zencdn.net/v/oceans.mp4'],
+
+	  repeatNumber: 0
 
 	};
 
