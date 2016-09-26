@@ -50,30 +50,34 @@ class Carousel {
   addHoverLogicToDots() {
     var dot = $('.dot').get()
     dot.forEach((dot) => {
-      dot.addEventListener('mouseover', (e) => {
+      dot.addEventListener('mouseover' || 'click', (e) => {
         let dotNumber = dot.getAttribute('data-dot')
-        this.currentlyPlayingVideo().then(function(data){
+        this.currentlyPlayingVideo().then((data) => {
           let slideData = data.currentlyPlaying;
           let videoData = data.jQueryObj;
           let slideNumber = videoData.attr('data-video')
+          let currentDot = data.currentDot
+          let nextDot = data.nextDot
           if (dotNumber === slideNumber) {
-            data.currentlyPlaying.play()
-            // give active color to dot
-            $(`.dot-${ dotNumber }`).css('background-color', 'red')
-            console.log(`add color to this dot ${ dotNumber}`);
+            slideData.play()
           } else {
-            data.currentlyPlaying.pause()
-            data.currentlyPlaying.parentNode.style.display = 'none'
-            // take active color away from dot
-            $(`.dot-${ dotNumber }`).css('background-color', 'black')
+            this.getDots().then((dot) => {
+              dot.forEach(function(index, dot){
+                if(dot === slideNumber) {
+                  index.style.backgroundColor = 'red'
+                } else {
+                  index.style.backgroundColor = 'black'
+                }
+              })
+            })
+            slideData.pause()
+            slideData.parentNode.style.display = 'none'
           }
         })
         this.sourceVideos().then(function(videoToPlay){
           var nextVideo = videoToPlay[dotNumber]
           nextVideo.parentNode.style.display = "block"
           nextVideo.play()
-          // add active color to dot
-          $(`.dot-${ dotNumber }`).css('background-color', 'red')
         })
       })
     })
@@ -82,6 +86,8 @@ class Carousel {
   currentlyPlayingVideo() {
     var videos = $("[id^=my_video_]").get()
     var currentlyPlaying
+    var dots = $('.dot')
+
     return new Promise((resolve, reject) => {
       videos.map((el, i) => {
         if (!el.paused) {
@@ -89,6 +95,8 @@ class Carousel {
           dataObject.currentlyPlaying = el
           dataObject.jQueryObj = $(el)
           dataObject.currentVideoIndex = i
+          dataObject.currentDot = $(dots[i])
+          dataObject.nextDot = $(dots[i + 1])
           resolve(dataObject)
         } if (el.paused) {
           let currentlyPaused = el.getAttribute('data-video')
@@ -102,9 +110,7 @@ class Carousel {
   playFirstVideo() {
     const videoOne = document.getElementById("my_video_0")
     videoOne.play()
-    // give first dot color
     $(`.dot-${ 0 }`).css('background-color', 'red')
-
   }
 
   recursivelyPlaySlides() {
@@ -118,11 +124,26 @@ class Carousel {
         let nextVideo = videos[i + 1]
         let firstVideo = videos[0]
         let firstSlide = slides[0]
-        let firstDot = dots[0]
+        let firstDot = $('.dot-0')
         let currentDot = dots[i]
         let nextDot = dots[i + 1]
-        if(videos[i + 1]) videos[i].addEventListener('ended', () => this.playNextSlide(currentSlide, nextSlide, nextVideo, currentDot, nextDot))
-        else videos[i].addEventListener('ended', () => this.playFirstSlide(currentSlide, firstSlide, firstVideo, currentDot, nextDot))
+
+        if(nextDot) {
+          videos[i].addEventListener('ended', () => {
+            this.playNextSlide(currentSlide, nextSlide, nextVideo, currentDot, nextDot)
+          })
+          videos[i].addEventListener('play', () => {
+            $(`.dot-${i}`).css('background-color', 'red')
+          })
+        }
+        else {
+          videos[i].addEventListener('ended', () => {
+            this.playFirstSlide(currentSlide, firstSlide, firstVideo, currentDot, firstDot)
+          })
+          videos[i].addEventListener('play', () => {
+            $(`.dot-${i}`).css('background-color', 'red')
+          })
+        }
       }
     })
   }
@@ -141,7 +162,7 @@ class Carousel {
     firstSlide.style.display = 'flex'
     firstVideo.style.display = "flex"
     currentDot.style.backgroundColor = 'black'
-    firstDot.style.backgroundColor = 'red'
+    $(`.dot-0`).css('background-color', 'red')
     firstVideo.play()
   }
 
@@ -156,6 +177,17 @@ class Carousel {
     return slideCollection
   }
 
+  getDots() {
+    var dots = $('.dot')
+    var dotCollection = []
+    return new Promise(function(resolve, reject){
+      dots.map(function(index, element){
+        dotCollection.push(element)
+      })
+      resolve(dotCollection)
+    })
+  }
+
   addVideosToSlides(uniqueId, videoSource) {
     let newSlide = `<div class="slide-${ uniqueId } slide"></div>`
     this.videoContainer.append(newSlide).css('display', 'flex')
@@ -167,7 +199,6 @@ class Carousel {
 
   printDot(index) {
     this.dotContainer.append(`<div class="dot-${ index } dot" data-dot="${ index }">•</div>`)
-    // dot is one add color
   }
 }
 

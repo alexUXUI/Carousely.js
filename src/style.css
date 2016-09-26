@@ -30,6 +30,11 @@
   justify-content: center;
 }
 
+.active {
+  background-color: red;
+}
+
+
 .video-title { color: white; }
 .video-description { color: black; }
 h2 { text-align: center; }
@@ -48,6 +53,10 @@ h2 { text-align: center; }
   color: white;
   justify-content: center;
 }
+/*
+[class^="dot-"]:hover {
+  color: red;
+}*/
 
 .dot {
   margin: .5%;

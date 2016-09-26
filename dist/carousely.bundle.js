@@ -8281,30 +8281,34 @@
 
 	      var dot = $('.dot').get();
 	      dot.forEach(function (dot) {
-	        dot.addEventListener('mouseover', function (e) {
+	        dot.addEventListener('mouseover' || 'click', function (e) {
 	          var dotNumber = dot.getAttribute('data-dot');
 	          _this3.currentlyPlayingVideo().then(function (data) {
 	            var slideData = data.currentlyPlaying;
 	            var videoData = data.jQueryObj;
 	            var slideNumber = videoData.attr('data-video');
+	            var currentDot = data.currentDot;
+	            var nextDot = data.nextDot;
 	            if (dotNumber === slideNumber) {
-	              data.currentlyPlaying.play();
-	              // give active color to dot
-	              $('.dot-' + dotNumber).css('background-color', 'red');
-	              console.log('add color to this dot ' + dotNumber);
+	              slideData.play();
 	            } else {
-	              data.currentlyPlaying.pause();
-	              data.currentlyPlaying.parentNode.style.display = 'none';
-	              // take active color away from dot
-	              $('.dot-' + dotNumber).css('background-color', 'black');
+	              _this3.getDots().then(function (dot) {
+	                dot.forEach(function (index, dot) {
+	                  if (dot === slideNumber) {
+	                    index.style.backgroundColor = 'red';
+	                  } else {
+	                    index.style.backgroundColor = 'black';
+	                  }
+	                });
+	              });
+	              slideData.pause();
+	              slideData.parentNode.style.display = 'none';
 	            }
 	          });
 	          _this3.sourceVideos().then(function (videoToPlay) {
 	            var nextVideo = videoToPlay[dotNumber];
 	            nextVideo.parentNode.style.display = "block";
 	            nextVideo.play();
-	            // add active color to dot
-	            $('.dot-' + dotNumber).css('background-color', 'red');
 	          });
 	        });
 	      });
@@ -8314,6 +8318,8 @@
 	    value: function currentlyPlayingVideo() {
 	      var videos = $("[id^=my_video_]").get();
 	      var currentlyPlaying;
+	      var dots = $('.dot');
+
 	      return new Promise(function (resolve, reject) {
 	        videos.map(function (el, i) {
 	          if (!el.paused) {
@@ -8321,6 +8327,8 @@
 	            dataObject.currentlyPlaying = el;
 	            dataObject.jQueryObj = $(el);
 	            dataObject.currentVideoIndex = i;
+	            dataObject.currentDot = $(dots[i]);
+	            dataObject.nextDot = $(dots[i + 1]);
 	            resolve(dataObject);
 	          }if (el.paused) {
 	            var currentlyPaused = el.getAttribute('data-video');
@@ -8335,7 +8343,6 @@
 	    value: function playFirstVideo() {
 	      var videoOne = document.getElementById("my_video_0");
 	      videoOne.play();
-	      // give first dot color
 	      $('.dot-' + 0).css('background-color', 'red');
 	    }
 	  }, {
@@ -8353,14 +8360,25 @@
 	          var nextVideo = videos[i + 1];
 	          var firstVideo = videos[0];
 	          var firstSlide = slides[0];
-	          var firstDot = dots[0];
+	          var firstDot = $('.dot-0');
 	          var currentDot = dots[i];
 	          var nextDot = dots[i + 1];
-	          if (videos[i + 1]) videos[i].addEventListener('ended', function () {
-	            return _this4.playNextSlide(currentSlide, nextSlide, nextVideo, currentDot, nextDot);
-	          });else videos[i].addEventListener('ended', function () {
-	            return _this4.playFirstSlide(currentSlide, firstSlide, firstVideo, currentDot, nextDot);
-	          });
+
+	          if (nextDot) {
+	            videos[i].addEventListener('ended', function () {
+	              _this4.playNextSlide(currentSlide, nextSlide, nextVideo, currentDot, nextDot);
+	            });
+	            videos[i].addEventListener('play', function () {
+	              $('.dot-' + i).css('background-color', 'red');
+	            });
+	          } else {
+	            videos[i].addEventListener('ended', function () {
+	              _this4.playFirstSlide(currentSlide, firstSlide, firstVideo, currentDot, firstDot);
+	            });
+	            videos[i].addEventListener('play', function () {
+	              $('.dot-' + i).css('background-color', 'red');
+	            });
+	          }
 	        };
 
 	        for (var i = 0; i < videos.length; i++) {
@@ -8385,7 +8403,7 @@
 	      firstSlide.style.display = 'flex';
 	      firstVideo.style.display = "flex";
 	      currentDot.style.backgroundColor = 'black';
-	      firstDot.style.backgroundColor = 'red';
+	      $('.dot-0').css('background-color', 'red');
 	      firstVideo.play();
 	    }
 	  }, {
@@ -8401,6 +8419,18 @@
 	      return slideCollection;
 	    }
 	  }, {
+	    key: 'getDots',
+	    value: function getDots() {
+	      var dots = $('.dot');
+	      var dotCollection = [];
+	      return new Promise(function (resolve, reject) {
+	        dots.map(function (index, element) {
+	          dotCollection.push(element);
+	        });
+	        resolve(dotCollection);
+	      });
+	    }
+	  }, {
 	    key: 'addVideosToSlides',
 	    value: function addVideosToSlides(uniqueId, videoSource) {
 	      var newSlide = '<div class="slide-' + uniqueId + ' slide"></div>';
@@ -8413,7 +8443,6 @@
 	    key: 'printDot',
 	    value: function printDot(index) {
 	      this.dotContainer.append('<div class="dot-' + index + ' dot" data-dot="' + index + '">•</div>');
-	      // dot is one add color
 	    }
 	  }]);
 
