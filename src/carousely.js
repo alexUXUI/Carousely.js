@@ -136,6 +136,7 @@ class Carousel {
           })
           videos[i].addEventListener('pause', () => {
             $(`.dot-${i}`).css('background-color', 'black')
+
           })
         }
         else {
