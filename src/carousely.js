@@ -194,9 +194,9 @@ class Carousel {
   }
 
   addVideosToSlides(uniqueId, videoSource) {
-    let newSlide = `<div class="slide-${ uniqueId } slide"></div>`
+    let newSlide = `<artice class="slide-${ uniqueId } slide"></artice>`
     this.videoContainer.append(newSlide).css('display', 'flex')
-    let textContent = `<div class="text-content-${ uniqueId }"><h3 class="video-title">${ this.titles[ uniqueId ] }</h3><p class="video-description">${ this.copy[ uniqueId ] }</p></div>`
+    let textContent = `<section class="text-content-${ uniqueId }"><h3 class="video-title">${ this.titles[ uniqueId ] }</h3><p class="video-description">${ this.copy[ uniqueId ] }</p></section>`
     let currentVideo = `<video id="my_video_${ uniqueId }" data-video="${ uniqueId }" src="${ videoSource }" controls preload="auto" muted class="vid_${ uniqueId }"></video>`
     if (uniqueId === 0) $(`.slide-${ uniqueId }`).append(currentVideo).append(textContent)
     else $(`.slide-${ uniqueId }`).append(currentVideo).append(textContent).css('display', 'none')
