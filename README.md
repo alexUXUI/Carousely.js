@@ -1,11 +1,8 @@
 # Carousely.js
 ### A small tool made for building video carousels.
 
-###### Philosophy
-No more wrestling with large code-bases to make simple changes and configurations.
-
 ## How does it work?
-Based on the info you pass, Carousely.js will create slides with three components: `Title, Video, and Description.`
+Based on the data you give, carousely.js will create slides with three components: `Title, Video, and Description.`
 
 ### How to Set up
 
@@ -22,13 +19,13 @@ Based on the info you pass, Carousely.js will create slides with three component
 <div class="dots"></div>
 ```
 
-> The video container will render however many slides you provide content for
+> `The video container will render however many slides you provide content for`
 
-> The dots container will render a corresponding dot for each slide
+> `The dots container will render a corresponding dot for each slide`
 
 ##### 3) Create an object for your content data
 
-The object should contain three _even_ arrays:
+The object should contain three _even_ arrays and one number, setting the number of times the slideshow sould play.
 
 ```javascript
 
@@ -44,10 +41,12 @@ const content = {
   links: [
     'http://vjs.zencdn.net/v/oceans.mp4',
     'http://vjs.zencdn.net/v/oceans.mp4',
-  ]
+  ],
+  repeatNumber: 3
+  
 }
 ```
-> Each array must have the same length for the slides to work
+> `Each array must have the same length for the slides to work`
 
 ```javascript
 content.copy.length = 2
