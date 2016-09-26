@@ -138,5 +138,3 @@ var carousel = new Carousel(content)
 
 - data object not good in that each array should contain a slide's
 content, not one slide pulling form 3 arrays
-
-- dot must have css class to indicate which one is currently active
