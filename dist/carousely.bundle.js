@@ -8197,6 +8197,7 @@
 	    this.copy = slideContent.copy;
 	    this.videoContainer = $('.vid-container');
 	    this.dotContainer = $('.dots');
+	    this.timesToItateThroughShow = slideContent.repeatNumber;
 	  }
 
 	  _createClass(Carousel, [{
@@ -8319,7 +8320,6 @@
 	      var videos = $("[id^=my_video_]").get();
 	      var currentlyPlaying;
 	      var dots = $('.dot');
-
 	      return new Promise(function (resolve, reject) {
 	        videos.map(function (el, i) {
 	          if (!el.paused) {
@@ -8404,12 +8404,16 @@
 	  }, {
 	    key: 'playFirstSlide',
 	    value: function playFirstSlide(currentSlide, firstSlide, firstVideo, currentDot, firstDot) {
-	      currentSlide.style.display = "none";
-	      firstSlide.style.display = 'flex';
-	      firstVideo.style.display = "flex";
-	      currentDot.style.backgroundColor = 'black';
-	      $('.dot-0').css('background-color', 'red');
-	      firstVideo.play();
+	      if (this.timesToItateThroughShow < 3) {
+	        currentSlide.style.display = "none";
+	        firstSlide.style.display = 'flex';
+	        firstVideo.style.display = "flex";
+	        currentDot.style.backgroundColor = 'black';
+	        $('.dot-0').css('background-color', 'red');
+	        firstVideo.play();
+	      }
+	      this.timesToItateThroughShow++;
+	      console.log('time to iterate through show', this.timesToItateThroughShow);
 	    }
 	  }, {
 	    key: 'getSlides',
@@ -8497,7 +8501,9 @@
 
 	  title: ['title ispsum dolor 1', 'title ispsum dolor 2', 'title ispsum dolor 3', 'title ispsum dolor 4'],
 
-	  links: ['http://vjs.zencdn.net/v/oceans.mp4', 'http://vjs.zencdn.net/v/oceans.mp4', 'http://vjs.zencdn.net/v/oceans.mp4', 'http://vjs.zencdn.net/v/oceans.mp4', 'http://vjs.zencdn.net/v/oceans.mp4']
+	  links: ['http://vjs.zencdn.net/v/oceans.mp4', 'http://vjs.zencdn.net/v/oceans.mp4', 'http://vjs.zencdn.net/v/oceans.mp4', 'http://vjs.zencdn.net/v/oceans.mp4', 'http://vjs.zencdn.net/v/oceans.mp4'],
+
+	  repeatNumber: 0
 
 	};
 

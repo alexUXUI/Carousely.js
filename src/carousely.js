@@ -7,6 +7,7 @@ class Carousel {
     this.copy = slideContent.copy
     this.videoContainer =  $('.vid-container')
     this.dotContainer = $('.dots')
+    this.timesToItateThroughShow = slideContent.repeatNumber
   }
 
   *startCarousel() {
@@ -87,7 +88,6 @@ class Carousel {
     var videos = $("[id^=my_video_]").get()
     var currentlyPlaying
     var dots = $('.dot')
-
     return new Promise((resolve, reject) => {
       videos.map((el, i) => {
         if (!el.paused) {
@@ -136,7 +136,6 @@ class Carousel {
           })
           videos[i].addEventListener('pause', () => {
             $(`.dot-${i}`).css('background-color', 'black')
-
           })
         }
         else {
@@ -164,12 +163,16 @@ class Carousel {
   }
 
   playFirstSlide(currentSlide, firstSlide, firstVideo, currentDot, firstDot) {
-    currentSlide.style.display = "none"
-    firstSlide.style.display = 'flex'
-    firstVideo.style.display = "flex"
-    currentDot.style.backgroundColor = 'black'
-    $(`.dot-0`).css('background-color', 'red')
-    firstVideo.play()
+    if(this.timesToItateThroughShow < 3) {
+      currentSlide.style.display = "none"
+      firstSlide.style.display = 'flex'
+      firstVideo.style.display = "flex"
+      currentDot.style.backgroundColor = 'black'
+      $(`.dot-0`).css('background-color', 'red')
+      firstVideo.play()
+    }
+    this.timesToItateThroughShow++
+    console.log(`time to iterate through show`, this.timesToItateThroughShow);
   }
 
   getSlides() {

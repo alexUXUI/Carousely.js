@@ -22,7 +22,9 @@ const slideContent = {
     'http://vjs.zencdn.net/v/oceans.mp4',
     'http://vjs.zencdn.net/v/oceans.mp4',
     'http://vjs.zencdn.net/v/oceans.mp4'
-  ]
+  ],
+
+  repeatNumber: 0
 
 }
 
