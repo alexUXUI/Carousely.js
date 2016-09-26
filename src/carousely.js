@@ -169,7 +169,6 @@ class Carousel {
       firstVideo.play()
     }
     this.timesToItateThroughShow++
-    console.log(`time to iterate through show`, this.timesToItateThroughShow);
   }
 
   getSlides() {
