@@ -134,7 +134,5 @@ var carousel = new Carousel(content)
 
 #### known bugs
 
-- end infinite recursion --> make this configurable
-
 - data object not good in that each array should contain a slide's
 content, not one slide pulling form 3 arrays
